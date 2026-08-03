@@ -20,10 +20,13 @@ export type NavItem = {
 };
 
 const adminRoles: AppRole[] = ["Owner", "Admin"];
+const posRoles: AppRole[] = ["Owner", "Admin", "Kasir"];
 
 export const appNavigation: NavItem[] = [
   { label: "Dashboard", path: "/dashboard", icon: <GridIcon /> },
-  { label: "POS Kasir", path: "/pos", icon: <PlugInIcon /> },
+  { label: "Sesi Kasir", path: "/cashier/session", icon: <TaskIcon />, allowedRoles: posRoles },
+  { label: "POS Kasir", path: "/pos", icon: <PlugInIcon />, allowedRoles: posRoles },
+  { label: "Transaksi", path: "/transactions", icon: <DocsIcon />, allowedRoles: posRoles },
   { label: "Produk", path: "/products", icon: <BoxCubeIcon />, allowedRoles: adminRoles },
   { label: "Kategori", path: "/categories", icon: <ListIcon />, allowedRoles: adminRoles },
   { label: "Stok", path: "/inventory", icon: <TableIcon />, allowedRoles: adminRoles },

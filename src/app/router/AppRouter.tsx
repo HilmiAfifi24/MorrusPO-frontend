@@ -24,6 +24,9 @@ import ChangePasswordPage from "../../features/users/pages/ChangePasswordPage";
 import UserCreatePage from "../../features/users/pages/UserCreatePage";
 import UserEditPage from "../../features/users/pages/UserEditPage";
 import UsersPage from "../../features/users/pages/UsersPage";
+import CashierSessionPage from "../../features/pos/pages/CashierSessionPage";
+import TransactionDetailPage from "../../features/transactions/pages/TransactionDetailPage";
+import TransactionsPage from "../../features/transactions/pages/TransactionsPage";
 
 export default function AppRouter() {
   return (
@@ -51,6 +54,14 @@ export default function AppRouter() {
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
+          <Route
+            path="cashier/session"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+                <CashierSessionPage />
+              </PermissionGuard>
+            }
+          />
           <Route
             path="products"
             element={
@@ -122,6 +133,22 @@ export default function AppRouter() {
               </PermissionGuard>
             }
           />
+          <Route
+            path="transactions"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+                <TransactionsPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="transactions/:id"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+                <TransactionDetailPage />
+              </PermissionGuard>
+            }
+          />
         </Route>
 
         <Route
@@ -132,7 +159,14 @@ export default function AppRouter() {
             </AuthGuard>
           }
         >
-          <Route index element={<PosPage />} />
+          <Route
+            index
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+                <PosPage />
+              </PermissionGuard>
+            }
+          />
         </Route>
 
         <Route
