@@ -5,7 +5,6 @@ import AuthGuard from "../guards/AuthGuard";
 import GuestGuard from "../guards/GuestGuard";
 import PermissionGuard from "../guards/PermissionGuard";
 import AuthLayout from "../../components/layout/AuthLayout";
-import CashierLayout from "../../components/layout/CashierLayout";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import SignInPage from "../../features/auth/pages/SignInPage";
 import CategoriesPage from "../../features/categories/pages/CategoriesPage";
@@ -149,18 +148,8 @@ export default function AppRouter() {
               </PermissionGuard>
             }
           />
-        </Route>
-
-        <Route
-          path="/pos"
-          element={
-            <AuthGuard>
-              <CashierLayout />
-            </AuthGuard>
-          }
-        >
           <Route
-            index
+            path="pos"
             element={
               <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
                 <PosPage />
