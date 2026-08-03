@@ -1,0 +1,34 @@
+import { apiClient } from "../../../api/client";
+import type {
+  CreateProductRequest,
+  ProductDto,
+  ProductFilters,
+  UpdateProductRequest,
+} from "../types/product";
+
+export function getProducts(filters: ProductFilters = {}) {
+  const params = new URLSearchParams();
+
+  if (filters.outletId) {
+    params.set("outletId", filters.outletId);
+  }
+
+  const query = params.toString();
+  return apiClient.get<ProductDto[]>(`/api/products${query ? `?${query}` : ""}`);
+}
+
+export function getProductById(id: string) {
+  return apiClient.get<ProductDto>(`/api/products/${id}`);
+}
+
+export function createProduct(payload: CreateProductRequest) {
+  return apiClient.post<ProductDto>("/api/products", payload);
+}
+
+export function updateProduct(id: string, payload: UpdateProductRequest) {
+  return apiClient.put<ProductDto>(`/api/products/${id}`, payload);
+}
+
+export function deleteProduct(id: string) {
+  return apiClient.delete<void>(`/api/products/${id}`);
+}

@@ -15,6 +15,8 @@ import SupplierDebtsPage from "../../features/debts/pages/SupplierDebtsPage";
 import InventoryPage from "../../features/inventory/pages/InventoryPage";
 import OutletsPage from "../../features/outlets/pages/OutletsPage";
 import PosPage from "../../features/pos/pages/PosPage";
+import ProductCreatePage from "../../features/products/pages/ProductCreatePage";
+import ProductEditPage from "../../features/products/pages/ProductEditPage";
 import ProductsPage from "../../features/products/pages/ProductsPage";
 import PurchaseOrdersPage from "../../features/purchase-orders/pages/PurchaseOrdersPage";
 import SuppliersPage from "../../features/suppliers/pages/SuppliersPage";
@@ -49,8 +51,38 @@ export default function AppRouter() {
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="categories" element={<CategoriesPage />} />
+          <Route
+            path="products"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <ProductsPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="products/create"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <ProductCreatePage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="products/:id/edit"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <ProductEditPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="categories"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <CategoriesPage />
+              </PermissionGuard>
+            }
+          />
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="stock-transfers" element={<InventoryPage mode="transfers" />} />
           <Route path="suppliers" element={<SuppliersPage />} />
