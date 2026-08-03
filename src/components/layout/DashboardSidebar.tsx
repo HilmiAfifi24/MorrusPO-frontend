@@ -26,7 +26,10 @@ export default function DashboardSidebar({
           {navigation.map((item) => {
             const isActive =
               location.pathname === item.path ||
-              (item.path !== "/dashboard" && location.pathname.startsWith(item.path));
+              (item.path !== "/dashboard" && location.pathname.startsWith(item.path)) ||
+              (item.path === "/inventory" && location.pathname.startsWith("/stock-opnames")) ||
+              (item.path === "/stock-transfers/outgoing" &&
+                location.pathname.startsWith("/stock-transfers"));
 
             return (
               <Link

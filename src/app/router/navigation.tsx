@@ -97,15 +97,15 @@ export const appNavigation: NavItem[] = [
     icon: <TableIcon />,
     requiredPermissions: ["stock.manage"],
     fallbackRoles: stockRoles,
-    status: "placeholder",
+    status: "active",
   },
   {
     label: "Transfer Stok",
-    path: "/stock-transfers",
+    path: "/stock-transfers/outgoing",
     icon: <DocsIcon />,
     requiredPermissions: ["stock.manage"],
     fallbackRoles: stockRoles,
-    status: "placeholder",
+    status: "active",
   },
   {
     label: "Supplier",

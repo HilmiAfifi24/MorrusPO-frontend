@@ -12,6 +12,12 @@ import ConsignmentsPage from "../../features/consignments/pages/ConsignmentsPage
 import DashboardPage from "../../features/dashboard/pages/DashboardPage";
 import SupplierDebtsPage from "../../features/debts/pages/SupplierDebtsPage";
 import InventoryPage from "../../features/inventory/pages/InventoryPage";
+import StockOpnameCreatePage from "../../features/inventory/pages/StockOpnameCreatePage";
+import StockOpnameDetailPage from "../../features/inventory/pages/StockOpnameDetailPage";
+import StockOpnamesPage from "../../features/inventory/pages/StockOpnamesPage";
+import StockTransferDetailPage from "../../features/inventory/pages/StockTransferDetailPage";
+import StockTransfersIncomingPage from "../../features/inventory/pages/StockTransfersIncomingPage";
+import StockTransfersOutgoingPage from "../../features/inventory/pages/StockTransfersOutgoingPage";
 import OutletsPage from "../../features/outlets/pages/OutletsPage";
 import PosPage from "../../features/pos/pages/PosPage";
 import ProductCreatePage from "../../features/products/pages/ProductCreatePage";
@@ -34,7 +40,7 @@ const transactionsPolicy = getNavigationItem("/transactions");
 const productsPolicy = getNavigationItem("/products");
 const categoriesPolicy = getNavigationItem("/categories");
 const inventoryPolicy = getNavigationItem("/inventory");
-const stockTransfersPolicy = getNavigationItem("/stock-transfers");
+const stockTransfersPolicy = getNavigationItem("/stock-transfers/outgoing");
 const suppliersPolicy = getNavigationItem("/suppliers");
 const purchaseOrdersPolicy = getNavigationItem("/purchase-orders");
 const supplierDebtsPolicy = getNavigationItem("/supplier-debts");
@@ -129,7 +135,6 @@ export default function AppRouter() {
               <PermissionGuard
                 requiredPermissions={inventoryPolicy?.requiredPermissions}
                 fallbackRoles={inventoryPolicy?.fallbackRoles}
-                allowPlaceholder
               >
                 <InventoryPage />
               </PermissionGuard>
@@ -138,12 +143,72 @@ export default function AppRouter() {
           <Route
             path="stock-transfers"
             element={
+              <Navigate to="/stock-transfers/outgoing" replace />
+            }
+          />
+          <Route
+            path="stock-opnames"
+            element={
+              <PermissionGuard
+                requiredPermissions={inventoryPolicy?.requiredPermissions}
+                fallbackRoles={inventoryPolicy?.fallbackRoles}
+              >
+                <StockOpnamesPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock-opnames/create"
+            element={
+              <PermissionGuard
+                requiredPermissions={inventoryPolicy?.requiredPermissions}
+                fallbackRoles={inventoryPolicy?.fallbackRoles}
+              >
+                <StockOpnameCreatePage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock-opnames/:id"
+            element={
+              <PermissionGuard
+                requiredPermissions={inventoryPolicy?.requiredPermissions}
+                fallbackRoles={inventoryPolicy?.fallbackRoles}
+              >
+                <StockOpnameDetailPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock-transfers/outgoing"
+            element={
               <PermissionGuard
                 requiredPermissions={stockTransfersPolicy?.requiredPermissions}
                 fallbackRoles={stockTransfersPolicy?.fallbackRoles}
-                allowPlaceholder
               >
-                <InventoryPage mode="transfers" />
+                <StockTransfersOutgoingPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock-transfers/incoming"
+            element={
+              <PermissionGuard
+                requiredPermissions={stockTransfersPolicy?.requiredPermissions}
+                fallbackRoles={stockTransfersPolicy?.fallbackRoles}
+              >
+                <StockTransfersIncomingPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock-transfers/:id"
+            element={
+              <PermissionGuard
+                requiredPermissions={stockTransfersPolicy?.requiredPermissions}
+                fallbackRoles={stockTransfersPolicy?.fallbackRoles}
+              >
+                <StockTransferDetailPage />
               </PermissionGuard>
             }
           />

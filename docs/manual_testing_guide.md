@@ -6,6 +6,7 @@ Dokumen ini dipakai sebagai panduan manual testing untuk QA dan developer pada f
 - manajemen pengguna
 - manajemen cabang
 - master kategori dan produk
+- inventory, stock opname, dan transfer stok
 - sesi kasir
 - POS kasir
 - histori transaksi
@@ -37,6 +38,9 @@ Tujuan manual testing ini:
 - outlets
 - categories
 - products
+- inventory
+- stock opnames
+- stock transfers
 - cashier session
 - POS kasir
 - histori transaksi
@@ -49,8 +53,6 @@ Tujuan manual testing ini:
 
 Modul berikut sudah ada di menu, tetapi **belum dianggap bug** jika hanya menampilkan placeholder:
 
-- stok
-- transfer stok
 - supplier
 - purchase order
 - utang supplier
@@ -169,6 +171,9 @@ Dipakai sebelum demo, release internal, atau merge besar:
 - create/edit/delete produk
 - create/edit user
 - create/edit outlet
+- inventory filter dan owner outlet switching
+- create stock opname
+- create/approve/reject stock transfer
 - open session
 - close session
 - mixed payment
@@ -183,12 +188,12 @@ Dipakai sebelum demo, release internal, atau merge besar:
 
 | Role | Dashboard | Sesi Kasir | POS | Transaksi | Produk | Kategori | Stok | Transfer | Supplier | PO | Utang Supplier | Konsinyasi | Users | Outlets | Void | Refund |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Owner | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
-| Admin | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
+| Owner | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
+| Admin | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
 | Kasir | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
-| Gudang | Ya | Tidak | Tidak | Tidak | Ya | Ya | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak |
+| Gudang | Ya | Tidak | Tidak | Tidak | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak |
 | Keuangan | Ya | Tidak | Tidak | Ya | Tidak | Tidak | Tidak | Tidak | Placeholder | Placeholder | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak |
-| KepalaCabang | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
+| KepalaCabang | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
 
 Catatan:
 
@@ -196,6 +201,7 @@ Catatan:
 - `Void` saat ini dibatasi untuk `Owner/Admin` melalui permission backend `transaction.void`.
 - `Refund dasar` saat ini tersedia untuk role operasional yang memang masuk flow transaksi.
 - Referensi policy lengkap ada di [role_access_matrix.md](./role_access_matrix.md).
+- Panduan khusus fase 4 ada di [manual_testing_phase_4.md](./manual_testing_phase_4.md).
 
 ---
 
