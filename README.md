@@ -1,204 +1,201 @@
-# TailAdmin React - Free React Tailwind Admin Dashboard Template
+# MorrusPOS Frontend
 
-TailAdmin is a free and open-source admin dashboard template built on **React and Tailwind CSS**, providing developers
-with everything they need to create a comprehensive, data-driven back-end,
-dashboard, or admin panel solution for upcoming web projects.
+Frontend untuk **MorrusPOS**, sistem POS dan manajemen operasional UMKM yang mencakup:
 
-With TailAdmin, you get access to all the necessary dashboard UI components, elements, and pages required to build a
-feature-rich and complete dashboard or admin panel. Whether you're building dashboard or admin panel for a complex web
-application or a simple website, TailAdmin is the perfect solution to help you get up and running quickly.
+- transaksi kasir
+- stok dan transfer cabang
+- supplier dan purchase order
+- utang usaha
+- konsinyasi
+- dashboard operasional
 
-![TailAdmin React.js Dashboard Preview](./banner.png)
+Saat ini frontend masih dalam tahap transformasi dari template **TailAdmin React** menjadi aplikasi MorrusPOS yang terintegrasi dengan backend ASP.NET Core.
 
-## Overview
+![MorrusPOS Frontend Preview](./banner.png)
 
-TailAdmin provides essential UI components and layouts for building feature-rich, data-driven admin dashboards and
-control panels. It's built on:
+## Status Project
+
+Kondisi saat ini:
+
+- basis UI masih menggunakan template TailAdmin
+- struktur frontend baru berbasis feature mulai disiapkan
+- backend aktif sudah tersedia sampai **Fase 6**
+- frontend sedang disiapkan untuk mengikuti roadmap MorrusPOS
+
+Artinya, project ini belum final sebagai produk operasional penuh, tetapi pondasi untuk migrasi modul sudah mulai dibangun.
+
+## Target Fitur
+
+Frontend ini ditujukan untuk mendukung roadmap MorrusPOS berikut:
+
+1. autentikasi, role, dan hak akses
+2. master produk dan kategori
+3. POS kasir dan sesi kasir
+4. stok, stok opname, dan transfer cabang
+5. supplier, purchase order, dan utang usaha
+6. konsinyasi dan settlement supplier
+7. integrasi online order
+8. dashboard bisnis dan laporan
+
+Untuk tahap sekarang, fokus implementasi frontend diprioritaskan sampai **Fase 6**, mengikuti kesiapan backend.
+
+## Tech Stack
 
 - React 19
 - TypeScript
+- Vite
 - Tailwind CSS v4
+- React Router
+- ApexCharts
+- FullCalendar
 
-### Quick Links
+## Struktur Project
 
-- [✨ Visit Website](https://tailadmin.com)
-- [📄 Documentation](https://tailadmin.com/docs)
-- [⬇️ Download](https://tailadmin.com/download)
-- [🖌️ Figma Design File (Community Edition)](https://www.figma.com/community/file/1214477970819985778)
-- [⚡ Get PRO Version](https://tailadmin.com/pricing)
+Struktur lama TailAdmin masih ada untuk referensi dan migrasi bertahap. Struktur baru MorrusPOS yang sedang dipakai:
 
-### Demos
-
-- [Free Version](https://free-react-demo.tailadmin.com/)
-- [Pro Version](https://react-demo.tailadmin.com)
-
-### Other Versions
-
-- [HTML Version](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template)
-- [Next.js Version](https://github.com/TailAdmin/free-nextjs-admin-dashboard)
-- [Vue.js Version](https://github.com/TailAdmin/vue-tailwind-admin-dashboard)
-- [Angular Version](https://github.com/TailAdmin/free-angular-tailwind-dashboard)
-- [Laravel Version](https://github.com/TailAdmin/tailadmin-laravel)
-
-## Installation
-
-### Prerequisites
-
-To get started with TailAdmin, ensure you have the following prerequisites installed and set up:
-
-- Node.js 18.x or later (recommended to use Node.js 20.x or later)
-
-### Cloning the Repository
-
-Clone the repository using the following command:
-
-```bash
-git clone https://github.com/TailAdmin/free-react-tailwind-admin-dashboard.git
+```text
+frontend/
+├── docs/
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── guards/
+│   │   ├── providers/
+│   │   └── router/
+│   ├── api/
+│   │   ├── client/
+│   │   ├── modules/
+│   │   └── types/
+│   ├── components/
+│   │   ├── forms/
+│   │   ├── layout/
+│   │   ├── tables/
+│   │   └── ui/
+│   ├── features/
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── pos/
+│   │   ├── products/
+│   │   ├── categories/
+│   │   ├── inventory/
+│   │   ├── suppliers/
+│   │   ├── purchase-orders/
+│   │   ├── debts/
+│   │   ├── consignments/
+│   │   ├── users/
+│   │   └── outlets/
+│   ├── hooks/
+│   ├── lib/
+│   ├── styles/
+│   └── utils/
+├── package.json
+└── vite.config.ts
 ```
 
-> Windows Users: place the repository near the root of your drive if you face issues while cloning.
+Referensi tambahan:
 
-1. Install dependencies:
+- [docs/frontend_roadmap.md](./docs/frontend_roadmap.md)
+- [src/structure.md](./src/structure.md)
 
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+## Setup Development
 
-2. Start the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+### Prasyarat
 
-## Components
+- Node.js 18 atau lebih baru
+- npm
 
-TailAdmin is a pre-designed starting point for building a web-based dashboard using React.js and Tailwind CSS. The
-template includes:
+### Install dependency
 
-- Sophisticated and accessible sidebar
-- Data visualization components
-- Prebuilt profile management and 404 page
-- Tables and Charts(Line and Bar)
-- Authentication forms and input elements
-- Alerts, Dropdowns, Modals, Buttons and more
-- FAQ & Accordion, Testimonials, and Carousels
-- Can't forget Dark Mode 🕶️
+```bash
+npm install
+```
 
-All components are built with React and styled using Tailwind CSS for easy customization.
+### Jalankan development server
 
-## Feature Comparison
+```bash
+npm run dev
+```
 
-### Free Version
+Secara default aplikasi akan berjalan di:
 
-- 1 Unique Dashboard
-- 35+ dashboard components
-- 50+ UI elements
-- Basic Figma design files
-- Community support
+```text
+http://localhost:5173
+```
 
-### Pro Version
+### Build production
 
-- 7 Unique Dashboards: Analytics, Ecommerce, Marketing, CRM, SaaS, Stocks, Logistics (more coming soon)
-- 500+ dashboard components and UI elements
-- Complete Figma design file
-- Email support
+```bash
+npm run build
+```
 
-To learn more about pro version features and pricing, visit our [pricing page](https://tailadmin.com/pricing).
+### Lint
 
-## Changelog
+```bash
+npm run lint
+```
 
-### Version 2.3.0 - [April 28, 2026]
-- Added **AI Dashboard** with token usage and revenue tracking.
-- Added **Sales Dashboard** with retention and multi-channel analytics.
-- Added **Finance Dashboard** with cashflow and balance management.
-- Introduced **6 New Layout variations** for improved UI flexibility.
-- Integrated **Advanced Data Visualization** with 7+ new chart types.
+## Integrasi Backend
 
-### Version 2.1.0 - [Dec 30, 2025]
+Frontend ini akan terhubung ke backend MorrusPOS berbasis ASP.NET Core.
 
-- Resolved Date Picker positioning and input issues in Charts.
+Rencana integrasi utamanya:
 
-### Version 2.0.2 - [March 25, 2025]
+- login dan refresh token
+- request API terpusat
+- context user, role, dan outlet
+- proteksi route berbasis auth dan permission
+- checkout POS
+- update stok real-time via SignalR
 
-- Upgraded to React 19
-- Included overrides for packages to prevent peer dependency errors.
-- Migrated from react-flatpickr to flatpickr package for React 19 support
+Untuk demo awal, target minimum yang harus bisa berjalan:
 
-### Version 2.0.1 - [February 27, 2025]
+1. membuat order manual tanpa integrasi GrabFood/GoFood/ShopeeFood
+2. stok berkurang secara real-time setelah checkout
 
-#### Update Overview
+Backend untuk kebutuhan demo tersebut sudah tersedia.
 
-- Upgraded to Tailwind CSS v4 for better performance and efficiency.
-- Updated class usage to match the latest syntax and features.
-- Replaced deprecated class and optimized styles.
+## Roadmap Implementasi Frontend
 
-#### Next Steps
+Urutan kerja yang direkomendasikan:
 
-- Run npm install or yarn install to update dependencies.
-- Check for any style changes or compatibility issues.
-- Refer to the Tailwind CSS v4 [Migration Guide](https://tailwindcss.com/docs/upgrade-guide) on this release. if needed.
-- This update keeps the project up to date with the latest Tailwind improvements. 🚀
+1. fondasi app, router, providers, API client
+2. auth flow dan route guard
+3. produk dan kategori
+4. POS kasir dan sesi kasir
+5. inventory, opname, dan transfer
+6. supplier, PO, utang
+7. konsinyasi
+8. dashboard dan integrasi online order
 
-### Version 2.0.0 - [February 2025]
+Roadmap lengkap ada di:
 
-A major update with comprehensive redesign and modern React patterns implementation.
+- [docs/frontend_roadmap.md](./docs/frontend_roadmap.md)
 
-#### Major Improvements
+## Catatan Migrasi dari TailAdmin
 
-- Complete UI redesign with modern React patterns
-- New features: collapsible sidebar, chat, and calendar
-- Improved performance and accessibility
-- Updated data visualization using ApexCharts
+Template TailAdmin dipakai sebagai starting point visual, tetapi:
 
-#### Key Features
+- route demo generik akan dibersihkan bertahap
+- halaman bisnis MorrusPOS akan menggantikan halaman demo template
+- komponen lama hanya dipertahankan selama masih berguna
 
-- Redesigned dashboards (Ecommerce, Analytics, Marketing, CRM)
-- Enhanced navigation with React Router integration
-- Advanced tables with sorting and filtering
-- Calendar with drag-and-drop support
-- New UI components and improved existing ones
+Jadi repo ini bukan lagi template umum, melainkan sedang diarahkan menjadi frontend khusus MorrusPOS.
 
-#### Breaking Changes
+## Git Workflow Singkat
 
-- Updated sidebar component API
-- Migrated charts to ApexCharts
-- Revised authentication system
+Jika repo frontend ini berdiri sendiri:
 
-[Read more](https://tailadmin.com/docs/update-logs/react) on this release.
+```bash
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin <url-repository>
+git push -u origin main
+```
 
-### Version 1.3.7 - [June 20, 2024]
-
-#### Enhancements
-
-1. Remove Repetition of DefaultLayout in every Pages
-2. Add ClickOutside Component for reduce repeated functionality in Header Message, Notification and User Dropdowns.
-
-### Version 1.3.6 - [Jan 31, 2024]
-
-#### Enhancements
-
-1. Integrate flatpickr in [Date Picker/Form Elements]
-2. Change color after select an option [Select Element/Form Elements].
-3. Make it functional [Multiselect Dropdown/Form Elements].
-4. Make best value editable [Pricing Table One/Pricing Table].
-5. Rearrange Folder structure.
-
-### Version 1.2.0 - [Apr 28, 2023]
-
-- Add Typescript in TailAdmin React.
-
-### Version 1.0.0 - Initial Release - [Mar 13, 2023]
-
-- Initial release of TailAdmin React.
+Jika `git push` gagal dengan pesan `src refspec main does not match any`, biasanya penyebabnya karena belum ada commit pertama.
 
 ## License
 
-TailAdmin React.js Free Version is released under the MIT License.
-
-## Support
-
-If you find this project helpful, please consider giving it a star on GitHub. Your support helps us continue developing
-and maintaining this template.
+Project ini mengikuti lisensi yang berlaku pada file [LICENSE.md](./LICENSE.md).
