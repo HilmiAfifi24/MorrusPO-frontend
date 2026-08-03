@@ -134,6 +134,34 @@ npm run build
 npm run lint
 ```
 
+### Automation testing dengan Playwright
+
+Frontend ini sekarang sudah punya fondasi E2E testing berbasis **Playwright**.
+
+Perintah yang tersedia:
+
+```bash
+npm run test:e2e
+```
+
+```bash
+npm run test:e2e:headed
+```
+
+```bash
+npm run test:e2e:ui
+```
+
+Catatan implementasi saat ini:
+
+- test berjalan terhadap frontend Vite lokal
+- backend di-mock di level network request agar suite stabil
+- helper mock berada di `tests/e2e/fixtures/`
+- suite awal mencakup:
+  - auth guard guest ke `/signin`
+  - login sukses ke dashboard shell
+  - owner wajib pilih outlet sebelum listing produk dimuat
+
 ## Integrasi Backend
 
 Frontend ini akan terhubung ke backend MorrusPOS berbasis ASP.NET Core.
