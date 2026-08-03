@@ -8,6 +8,15 @@ export const ownerSession: AuthSession = {
   name: "Morrus Owner",
   role: "Owner",
   outletId: null,
+  permissions: [
+    "transaction.create",
+    "transaction.void",
+    "product.manage",
+    "stock.manage",
+    "supplier.manage",
+    "consignment.manage",
+    "report.view",
+  ],
 };
 
 export const adminSession: AuthSession = {
@@ -17,6 +26,15 @@ export const adminSession: AuthSession = {
   name: "Morrus Admin",
   role: "Admin",
   outletId: "8bba5427-017e-40fb-886f-5e4c6c9a3809",
+  permissions: [
+    "transaction.create",
+    "transaction.void",
+    "product.manage",
+    "stock.manage",
+    "supplier.manage",
+    "consignment.manage",
+    "report.view",
+  ],
 };
 
 export async function seedAuthSession(page: Page, session: AuthSession) {

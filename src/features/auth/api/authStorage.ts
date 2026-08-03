@@ -10,7 +10,28 @@ export function getStoredAuthSession(): AuthSession | null {
   }
 
   try {
-    return JSON.parse(raw) as AuthSession;
+    const parsed = JSON.parse(raw) as Partial<AuthSession>;
+
+    if (
+      typeof parsed.accessToken !== "string" ||
+      typeof parsed.refreshToken !== "string" ||
+      typeof parsed.userId !== "string" ||
+      typeof parsed.name !== "string" ||
+      typeof parsed.role !== "string"
+    ) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+
+    return {
+      accessToken: parsed.accessToken,
+      refreshToken: parsed.refreshToken,
+      userId: parsed.userId,
+      name: parsed.name,
+      role: parsed.role,
+      outletId: parsed.outletId ?? null,
+      permissions: Array.isArray(parsed.permissions) ? parsed.permissions : [],
+    };
   } catch {
     localStorage.removeItem(STORAGE_KEY);
     return null;

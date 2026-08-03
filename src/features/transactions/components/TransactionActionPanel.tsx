@@ -31,7 +31,8 @@ export default function TransactionActionPanel({
   const canRefund =
     session?.role === "Owner" ||
     session?.role === "Admin" ||
-    session?.role === "Kasir";
+    session?.role === "Kasir" ||
+    session?.role === "KepalaCabang";
   const hasReturns = transaction.returns.length > 0;
   const hasRefundableItems = useMemo(
     () => transaction.items.some((item) => item.remainingQty > 0),

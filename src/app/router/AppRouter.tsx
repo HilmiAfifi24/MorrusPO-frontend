@@ -26,6 +26,21 @@ import UsersPage from "../../features/users/pages/UsersPage";
 import CashierSessionPage from "../../features/pos/pages/CashierSessionPage";
 import TransactionDetailPage from "../../features/transactions/pages/TransactionDetailPage";
 import TransactionsPage from "../../features/transactions/pages/TransactionsPage";
+import { getNavigationItem } from "./navigation";
+
+const cashierSessionPolicy = getNavigationItem("/cashier/session");
+const posPolicy = getNavigationItem("/pos");
+const transactionsPolicy = getNavigationItem("/transactions");
+const productsPolicy = getNavigationItem("/products");
+const categoriesPolicy = getNavigationItem("/categories");
+const inventoryPolicy = getNavigationItem("/inventory");
+const stockTransfersPolicy = getNavigationItem("/stock-transfers");
+const suppliersPolicy = getNavigationItem("/suppliers");
+const purchaseOrdersPolicy = getNavigationItem("/purchase-orders");
+const supplierDebtsPolicy = getNavigationItem("/supplier-debts");
+const consignmentsPolicy = getNavigationItem("/consignments");
+const usersPolicy = getNavigationItem("/users");
+const outletsPolicy = getNavigationItem("/outlets");
 
 export default function AppRouter() {
   return (
@@ -56,7 +71,10 @@ export default function AppRouter() {
           <Route
             path="cashier/session"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+              <PermissionGuard
+                requiredPermissions={cashierSessionPolicy?.requiredPermissions}
+                fallbackRoles={cashierSessionPolicy?.fallbackRoles}
+              >
                 <CashierSessionPage />
               </PermissionGuard>
             }
@@ -64,7 +82,10 @@ export default function AppRouter() {
           <Route
             path="products"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={productsPolicy?.requiredPermissions}
+                fallbackRoles={productsPolicy?.fallbackRoles}
+              >
                 <ProductsPage />
               </PermissionGuard>
             }
@@ -72,7 +93,10 @@ export default function AppRouter() {
           <Route
             path="products/create"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={productsPolicy?.requiredPermissions}
+                fallbackRoles={productsPolicy?.fallbackRoles}
+              >
                 <ProductCreatePage />
               </PermissionGuard>
             }
@@ -80,7 +104,10 @@ export default function AppRouter() {
           <Route
             path="products/:id/edit"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={productsPolicy?.requiredPermissions}
+                fallbackRoles={productsPolicy?.fallbackRoles}
+              >
                 <ProductEditPage />
               </PermissionGuard>
             }
@@ -88,21 +115,93 @@ export default function AppRouter() {
           <Route
             path="categories"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={categoriesPolicy?.requiredPermissions}
+                fallbackRoles={categoriesPolicy?.fallbackRoles}
+              >
                 <CategoriesPage />
               </PermissionGuard>
             }
           />
-          <Route path="inventory" element={<InventoryPage />} />
-          <Route path="stock-transfers" element={<InventoryPage mode="transfers" />} />
-          <Route path="suppliers" element={<SuppliersPage />} />
-          <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
-          <Route path="supplier-debts" element={<SupplierDebtsPage />} />
-          <Route path="consignments" element={<ConsignmentsPage />} />
+          <Route
+            path="inventory"
+            element={
+              <PermissionGuard
+                requiredPermissions={inventoryPolicy?.requiredPermissions}
+                fallbackRoles={inventoryPolicy?.fallbackRoles}
+                allowPlaceholder
+              >
+                <InventoryPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock-transfers"
+            element={
+              <PermissionGuard
+                requiredPermissions={stockTransfersPolicy?.requiredPermissions}
+                fallbackRoles={stockTransfersPolicy?.fallbackRoles}
+                allowPlaceholder
+              >
+                <InventoryPage mode="transfers" />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="suppliers"
+            element={
+              <PermissionGuard
+                requiredPermissions={suppliersPolicy?.requiredPermissions}
+                fallbackRoles={suppliersPolicy?.fallbackRoles}
+                allowPlaceholder
+              >
+                <SuppliersPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="purchase-orders"
+            element={
+              <PermissionGuard
+                requiredPermissions={purchaseOrdersPolicy?.requiredPermissions}
+                fallbackRoles={purchaseOrdersPolicy?.fallbackRoles}
+                allowPlaceholder
+              >
+                <PurchaseOrdersPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="supplier-debts"
+            element={
+              <PermissionGuard
+                requiredPermissions={supplierDebtsPolicy?.requiredPermissions}
+                fallbackRoles={supplierDebtsPolicy?.fallbackRoles}
+                allowPlaceholder
+              >
+                <SupplierDebtsPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="consignments"
+            element={
+              <PermissionGuard
+                requiredPermissions={consignmentsPolicy?.requiredPermissions}
+                fallbackRoles={consignmentsPolicy?.fallbackRoles}
+                allowPlaceholder
+              >
+                <ConsignmentsPage />
+              </PermissionGuard>
+            }
+          />
           <Route
             path="users"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={usersPolicy?.requiredPermissions}
+                fallbackRoles={usersPolicy?.fallbackRoles}
+              >
                 <UsersPage />
               </PermissionGuard>
             }
@@ -110,7 +209,10 @@ export default function AppRouter() {
           <Route
             path="users/create"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={usersPolicy?.requiredPermissions}
+                fallbackRoles={usersPolicy?.fallbackRoles}
+              >
                 <UserCreatePage />
               </PermissionGuard>
             }
@@ -118,7 +220,10 @@ export default function AppRouter() {
           <Route
             path="users/:id/edit"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={usersPolicy?.requiredPermissions}
+                fallbackRoles={usersPolicy?.fallbackRoles}
+              >
                 <UserEditPage />
               </PermissionGuard>
             }
@@ -127,7 +232,10 @@ export default function AppRouter() {
           <Route
             path="outlets"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+              <PermissionGuard
+                requiredPermissions={outletsPolicy?.requiredPermissions}
+                fallbackRoles={outletsPolicy?.fallbackRoles}
+              >
                 <OutletsPage />
               </PermissionGuard>
             }
@@ -135,7 +243,10 @@ export default function AppRouter() {
           <Route
             path="transactions"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+              <PermissionGuard
+                requiredPermissions={transactionsPolicy?.requiredPermissions}
+                fallbackRoles={transactionsPolicy?.fallbackRoles}
+              >
                 <TransactionsPage />
               </PermissionGuard>
             }
@@ -143,7 +254,10 @@ export default function AppRouter() {
           <Route
             path="transactions/:id"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+              <PermissionGuard
+                requiredPermissions={transactionsPolicy?.requiredPermissions}
+                fallbackRoles={transactionsPolicy?.fallbackRoles}
+              >
                 <TransactionDetailPage />
               </PermissionGuard>
             }
@@ -151,7 +265,10 @@ export default function AppRouter() {
           <Route
             path="pos"
             element={
-              <PermissionGuard requiredRoles={["Owner", "Admin", "Kasir"]}>
+              <PermissionGuard
+                requiredPermissions={posPolicy?.requiredPermissions}
+                fallbackRoles={posPolicy?.fallbackRoles}
+              >
                 <PosPage />
               </PermissionGuard>
             }

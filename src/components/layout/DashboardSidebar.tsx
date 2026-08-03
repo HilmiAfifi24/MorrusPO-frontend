@@ -12,7 +12,7 @@ export default function DashboardSidebar({
 }) {
   const location = useLocation();
   const { session } = useAuth();
-  const navigation = getVisibleNavigation(session?.role ?? null);
+  const navigation = getVisibleNavigation(session);
 
   return (
     <>
@@ -45,6 +45,11 @@ export default function DashboardSidebar({
                   {item.icon}
                 </span>
                 <span className="menu-item-text">{item.label}</span>
+                {item.status === "placeholder" ? (
+                  <span className="ml-auto rounded-full bg-warning-50 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-warning-700 dark:bg-warning-500/10 dark:text-warning-300">
+                    Soon
+                  </span>
+                ) : null}
               </Link>
             );
           })}

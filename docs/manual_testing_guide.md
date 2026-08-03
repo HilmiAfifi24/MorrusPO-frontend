@@ -181,17 +181,21 @@ Dipakai sebelum demo, release internal, atau merge besar:
 
 ## 7. Test Matrix Per Role
 
-| Role | Dashboard | Users | Outlets | Categories | Products | Cashier Session | POS | Transactions | Void | Refund |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Owner | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya |
-| Admin | Ya | Ya | Ya, read/edit sesuai UI | Ya | Ya | Ya | Ya | Ya | Ya | Ya |
-| Kasir | Ya | Tidak | Tidak | Tidak | Tidak | Ya | Ya | Ya | Tidak | Ya |
+| Role | Dashboard | Sesi Kasir | POS | Transaksi | Produk | Kategori | Stok | Transfer | Supplier | PO | Utang Supplier | Konsinyasi | Users | Outlets | Void | Refund |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Owner | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
+| Admin | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
+| Kasir | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
+| Gudang | Ya | Tidak | Tidak | Tidak | Ya | Ya | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak |
+| Keuangan | Ya | Tidak | Tidak | Ya | Tidak | Tidak | Tidak | Tidak | Placeholder | Placeholder | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak |
+| KepalaCabang | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
 
 Catatan:
 
-- `Kasir` tidak seharusnya melihat menu admin seperti Products, Categories, Users, dan Outlets.
-- `Void` saat ini dibatasi untuk `Owner/Admin`.
-- `Refund dasar` saat ini tersedia untuk role operasional.
+- Modul placeholder bukan bug bila hanya menampilkan status `Coming soon` atau placeholder setara.
+- `Void` saat ini dibatasi untuk `Owner/Admin` melalui permission backend `transaction.void`.
+- `Refund dasar` saat ini tersedia untuk role operasional yang memang masuk flow transaksi.
+- Referensi policy lengkap ada di [role_access_matrix.md](./role_access_matrix.md).
 
 ---
 
@@ -411,4 +415,3 @@ Jika ada fitur baru yang diaktifkan:
 - tambahkan skenario manual test baru ke dokumen ini
 - tandai modul yang berubah dari placeholder menjadi aktif
 - sinkronkan dengan suite Playwright agar regression manual dan automation tetap saling melengkapi
-

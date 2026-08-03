@@ -9,46 +9,167 @@ import {
   TableIcon,
   TaskIcon,
 } from "../../icons";
+import type { AuthSession } from "../../features/auth/types/auth";
+import { canAccessByPolicy } from "../../features/auth/utils/access";
 
-export type AppRole = "Owner" | "Admin" | "Kasir" | "Gudang" | "Keuangan" | "Kepala Cabang" | string;
+export type AppRole =
+  | "Owner"
+  | "Admin"
+  | "Kasir"
+  | "Gudang"
+  | "Keuangan"
+  | "KepalaCabang"
+  | string;
+
+export type PermissionCode =
+  | "transaction.create"
+  | "transaction.void"
+  | "product.manage"
+  | "stock.manage"
+  | "supplier.manage"
+  | "consignment.manage"
+  | "report.view"
+  | string;
+
+export type MenuStatus = "active" | "placeholder";
 
 export type NavItem = {
   label: string;
   path: string;
   icon: ReactNode;
-  allowedRoles?: AppRole[];
+  requiredPermissions?: PermissionCode[];
+  fallbackRoles?: AppRole[];
+  status: MenuStatus;
 };
 
-const adminRoles: AppRole[] = ["Owner", "Admin"];
-const posRoles: AppRole[] = ["Owner", "Admin", "Kasir"];
+const ownerAdminRoles: AppRole[] = ["Owner", "Admin"];
+const transactionCreateRoles: AppRole[] = ["Owner", "Admin", "Kasir", "KepalaCabang"];
+const transactionReadRoles: AppRole[] = ["Owner", "Admin", "Kasir", "Keuangan", "KepalaCabang"];
+const productRoles: AppRole[] = ["Owner", "Admin", "Gudang", "KepalaCabang"];
+const stockRoles: AppRole[] = ["Owner", "Admin", "Gudang", "KepalaCabang"];
+const supplierRoles: AppRole[] = ["Owner", "Admin", "Keuangan"];
+const consignmentRoles: AppRole[] = ["Owner", "Admin", "Keuangan"];
 
 export const appNavigation: NavItem[] = [
-  { label: "Dashboard", path: "/dashboard", icon: <GridIcon /> },
-  { label: "Sesi Kasir", path: "/cashier/session", icon: <TaskIcon />, allowedRoles: posRoles },
-  { label: "POS Kasir", path: "/pos", icon: <PlugInIcon />, allowedRoles: posRoles },
-  { label: "Transaksi", path: "/transactions", icon: <DocsIcon />, allowedRoles: posRoles },
-  { label: "Produk", path: "/products", icon: <BoxCubeIcon />, allowedRoles: adminRoles },
-  { label: "Kategori", path: "/categories", icon: <ListIcon />, allowedRoles: adminRoles },
-  { label: "Stok", path: "/inventory", icon: <TableIcon />, allowedRoles: adminRoles },
-  { label: "Transfer Stok", path: "/stock-transfers", icon: <DocsIcon />, allowedRoles: adminRoles },
-  { label: "Supplier", path: "/suppliers", icon: <GroupIcon />, allowedRoles: adminRoles },
-  { label: "Purchase Order", path: "/purchase-orders", icon: <TaskIcon />, allowedRoles: adminRoles },
-  { label: "Utang Supplier", path: "/supplier-debts", icon: <DocsIcon />, allowedRoles: adminRoles },
-  { label: "Konsinyasi", path: "/consignments", icon: <BoxCubeIcon />, allowedRoles: adminRoles },
-  { label: "Pengguna", path: "/users", icon: <GroupIcon />, allowedRoles: adminRoles },
-  { label: "Cabang", path: "/outlets", icon: <DocsIcon />, allowedRoles: adminRoles },
+  { label: "Dashboard", path: "/dashboard", icon: <GridIcon />, status: "active" },
+  {
+    label: "Sesi Kasir",
+    path: "/cashier/session",
+    icon: <TaskIcon />,
+    requiredPermissions: ["transaction.create"],
+    fallbackRoles: transactionCreateRoles,
+    status: "active",
+  },
+  {
+    label: "POS Kasir",
+    path: "/pos",
+    icon: <PlugInIcon />,
+    requiredPermissions: ["transaction.create"],
+    fallbackRoles: transactionCreateRoles,
+    status: "active",
+  },
+  {
+    label: "Transaksi",
+    path: "/transactions",
+    icon: <DocsIcon />,
+    fallbackRoles: transactionReadRoles,
+    status: "active",
+  },
+  {
+    label: "Produk",
+    path: "/products",
+    icon: <BoxCubeIcon />,
+    requiredPermissions: ["product.manage"],
+    fallbackRoles: productRoles,
+    status: "active",
+  },
+  {
+    label: "Kategori",
+    path: "/categories",
+    icon: <ListIcon />,
+    requiredPermissions: ["product.manage"],
+    fallbackRoles: productRoles,
+    status: "active",
+  },
+  {
+    label: "Stok",
+    path: "/inventory",
+    icon: <TableIcon />,
+    requiredPermissions: ["stock.manage"],
+    fallbackRoles: stockRoles,
+    status: "placeholder",
+  },
+  {
+    label: "Transfer Stok",
+    path: "/stock-transfers",
+    icon: <DocsIcon />,
+    requiredPermissions: ["stock.manage"],
+    fallbackRoles: stockRoles,
+    status: "placeholder",
+  },
+  {
+    label: "Supplier",
+    path: "/suppliers",
+    icon: <GroupIcon />,
+    requiredPermissions: ["supplier.manage"],
+    fallbackRoles: supplierRoles,
+    status: "placeholder",
+  },
+  {
+    label: "Purchase Order",
+    path: "/purchase-orders",
+    icon: <TaskIcon />,
+    requiredPermissions: ["supplier.manage"],
+    fallbackRoles: supplierRoles,
+    status: "placeholder",
+  },
+  {
+    label: "Utang Supplier",
+    path: "/supplier-debts",
+    icon: <DocsIcon />,
+    requiredPermissions: ["supplier.manage"],
+    fallbackRoles: supplierRoles,
+    status: "placeholder",
+  },
+  {
+    label: "Konsinyasi",
+    path: "/consignments",
+    icon: <BoxCubeIcon />,
+    requiredPermissions: ["consignment.manage"],
+    fallbackRoles: consignmentRoles,
+    status: "placeholder",
+  },
+  {
+    label: "Pengguna",
+    path: "/users",
+    icon: <GroupIcon />,
+    fallbackRoles: ownerAdminRoles,
+    status: "active",
+  },
+  {
+    label: "Cabang",
+    path: "/outlets",
+    icon: <DocsIcon />,
+    fallbackRoles: ownerAdminRoles,
+    status: "active",
+  },
 ];
 
-export function getVisibleNavigation(role: string | null): NavItem[] {
-  if (!role) {
+export function getVisibleNavigation(
+  session: Pick<AuthSession, "role" | "permissions"> | null,
+): NavItem[] {
+  if (!session?.role) {
     return [];
   }
 
   return appNavigation.filter((item) => {
-    if (!item.allowedRoles?.length) {
-      return true;
-    }
-
-    return item.allowedRoles.includes(role);
+    return canAccessByPolicy(session, {
+      requiredPermissions: item.requiredPermissions,
+      fallbackRoles: item.fallbackRoles,
+    });
   });
+}
+
+export function getNavigationItem(path: string) {
+  return appNavigation.find((item) => item.path === path) ?? null;
 }

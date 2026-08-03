@@ -5,6 +5,7 @@ export type AuthSession = {
   name: string;
   role: string;
   outletId: string | null;
+  permissions: string[];
 };
 
 export type LoginRequest = {
