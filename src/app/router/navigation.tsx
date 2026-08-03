@@ -113,7 +113,7 @@ export const appNavigation: NavItem[] = [
     icon: <GroupIcon />,
     requiredPermissions: ["supplier.manage"],
     fallbackRoles: supplierRoles,
-    status: "placeholder",
+    status: "active",
   },
   {
     label: "Purchase Order",
@@ -121,7 +121,7 @@ export const appNavigation: NavItem[] = [
     icon: <TaskIcon />,
     requiredPermissions: ["supplier.manage"],
     fallbackRoles: supplierRoles,
-    status: "placeholder",
+    status: "active",
   },
   {
     label: "Utang Supplier",
@@ -129,7 +129,7 @@ export const appNavigation: NavItem[] = [
     icon: <DocsIcon />,
     requiredPermissions: ["supplier.manage"],
     fallbackRoles: supplierRoles,
-    status: "placeholder",
+    status: "active",
   },
   {
     label: "Konsinyasi",

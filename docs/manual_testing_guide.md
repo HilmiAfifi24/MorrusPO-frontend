@@ -7,6 +7,7 @@ Dokumen ini dipakai sebagai panduan manual testing untuk QA dan developer pada f
 - manajemen cabang
 - master kategori dan produk
 - inventory, stock opname, dan transfer stok
+- supplier, purchase order, dan utang supplier
 - sesi kasir
 - POS kasir
 - histori transaksi
@@ -41,6 +42,9 @@ Tujuan manual testing ini:
 - inventory
 - stock opnames
 - stock transfers
+- suppliers
+- purchase orders
+- supplier debts
 - cashier session
 - POS kasir
 - histori transaksi
@@ -53,9 +57,6 @@ Tujuan manual testing ini:
 
 Modul berikut sudah ada di menu, tetapi **belum dianggap bug** jika hanya menampilkan placeholder:
 
-- supplier
-- purchase order
-- utang supplier
 - konsinyasi
 
 QA perlu menandai modul ini sebagai:
@@ -188,11 +189,11 @@ Dipakai sebelum demo, release internal, atau merge besar:
 
 | Role | Dashboard | Sesi Kasir | POS | Transaksi | Produk | Kategori | Stok | Transfer | Supplier | PO | Utang Supplier | Konsinyasi | Users | Outlets | Void | Refund |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Owner | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
-| Admin | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Placeholder | Placeholder | Placeholder | Ya | Ya | Ya | Ya |
+| Owner | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Ya | Ya | Ya | Ya |
+| Admin | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Placeholder | Ya | Ya | Ya | Ya |
 | Kasir | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
 | Gudang | Ya | Tidak | Tidak | Tidak | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak |
-| Keuangan | Ya | Tidak | Tidak | Ya | Tidak | Tidak | Tidak | Tidak | Placeholder | Placeholder | Placeholder | Placeholder | Tidak | Tidak | Tidak | Tidak |
+| Keuangan | Ya | Tidak | Tidak | Ya | Tidak | Tidak | Tidak | Tidak | Ya | Ya | Ya | Placeholder | Tidak | Tidak | Tidak | Tidak |
 | KepalaCabang | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Ya | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Tidak | Ya |
 
 Catatan:
@@ -202,6 +203,7 @@ Catatan:
 - `Refund dasar` saat ini tersedia untuk role operasional yang memang masuk flow transaksi.
 - Referensi policy lengkap ada di [role_access_matrix.md](./role_access_matrix.md).
 - Panduan khusus fase 4 ada di [manual_testing_phase_4.md](./manual_testing_phase_4.md).
+- Panduan khusus fase 5 ada di [manual_testing_phase_5.md](./manual_testing_phase_5.md).
 
 ---
 
@@ -327,10 +329,7 @@ Catatan:
 |---|---|---|---|
 | PH-01 | Inventory page | Buka `/inventory` | Tampil placeholder |
 | PH-02 | Stock transfer page | Buka `/stock-transfers` | Tampil placeholder |
-| PH-03 | Supplier page | Buka `/suppliers` | Tampil placeholder |
-| PH-04 | Purchase order page | Buka `/purchase-orders` | Tampil placeholder |
-| PH-05 | Supplier debt page | Buka `/supplier-debts` | Tampil placeholder |
-| PH-06 | Consignments page | Buka `/consignments` | Tampil placeholder |
+| PH-03 | Consignments page | Buka `/consignments` | Tampil placeholder |
 
 ---
 
@@ -354,7 +353,7 @@ Jika waktu sempit, jalankan urutan ini:
 Hal berikut saat ini dianggap expected:
 
 - owner harus memilih outlet di beberapa halaman operasional
-- beberapa modul menu masih placeholder
+- modul `konsinyasi` masih placeholder
 - POS saat ini memakai pencarian client-side, bukan search endpoint khusus
 - print struk masih memakai `window.print()` browser
 - refund saat ini masih `refund dasar`, belum ada refund nominal per payment method
@@ -371,6 +370,7 @@ Suite E2E yang sudah ada saat ini mencakup:
 - auth guard guest
 - login sukses
 - owner wajib pilih outlet sebelum load products
+- procurement owner wajib pilih outlet sebelum load PO/debt
 
 Jalankan dengan:
 

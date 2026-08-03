@@ -11,6 +11,7 @@ import CategoriesPage from "../../features/categories/pages/CategoriesPage";
 import ConsignmentsPage from "../../features/consignments/pages/ConsignmentsPage";
 import DashboardPage from "../../features/dashboard/pages/DashboardPage";
 import SupplierDebtsPage from "../../features/debts/pages/SupplierDebtsPage";
+import SupplierDebtPaymentsPage from "../../features/debts/pages/SupplierDebtPaymentsPage";
 import InventoryPage from "../../features/inventory/pages/InventoryPage";
 import StockOpnameCreatePage from "../../features/inventory/pages/StockOpnameCreatePage";
 import StockOpnameDetailPage from "../../features/inventory/pages/StockOpnameDetailPage";
@@ -24,6 +25,8 @@ import ProductCreatePage from "../../features/products/pages/ProductCreatePage";
 import ProductEditPage from "../../features/products/pages/ProductEditPage";
 import ProductsPage from "../../features/products/pages/ProductsPage";
 import PurchaseOrdersPage from "../../features/purchase-orders/pages/PurchaseOrdersPage";
+import PurchaseOrderCreatePage from "../../features/purchase-orders/pages/PurchaseOrderCreatePage";
+import PurchaseOrderDetailPage from "../../features/purchase-orders/pages/PurchaseOrderDetailPage";
 import SuppliersPage from "../../features/suppliers/pages/SuppliersPage";
 import ChangePasswordPage from "../../features/users/pages/ChangePasswordPage";
 import UserCreatePage from "../../features/users/pages/UserCreatePage";
@@ -218,7 +221,6 @@ export default function AppRouter() {
               <PermissionGuard
                 requiredPermissions={suppliersPolicy?.requiredPermissions}
                 fallbackRoles={suppliersPolicy?.fallbackRoles}
-                allowPlaceholder
               >
                 <SuppliersPage />
               </PermissionGuard>
@@ -230,9 +232,30 @@ export default function AppRouter() {
               <PermissionGuard
                 requiredPermissions={purchaseOrdersPolicy?.requiredPermissions}
                 fallbackRoles={purchaseOrdersPolicy?.fallbackRoles}
-                allowPlaceholder
               >
                 <PurchaseOrdersPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="purchase-orders/create"
+            element={
+              <PermissionGuard
+                requiredPermissions={purchaseOrdersPolicy?.requiredPermissions}
+                fallbackRoles={purchaseOrdersPolicy?.fallbackRoles}
+              >
+                <PurchaseOrderCreatePage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="purchase-orders/:id"
+            element={
+              <PermissionGuard
+                requiredPermissions={purchaseOrdersPolicy?.requiredPermissions}
+                fallbackRoles={purchaseOrdersPolicy?.fallbackRoles}
+              >
+                <PurchaseOrderDetailPage />
               </PermissionGuard>
             }
           />
@@ -242,9 +265,19 @@ export default function AppRouter() {
               <PermissionGuard
                 requiredPermissions={supplierDebtsPolicy?.requiredPermissions}
                 fallbackRoles={supplierDebtsPolicy?.fallbackRoles}
-                allowPlaceholder
               >
                 <SupplierDebtsPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="supplier-debts/payments"
+            element={
+              <PermissionGuard
+                requiredPermissions={supplierDebtsPolicy?.requiredPermissions}
+                fallbackRoles={supplierDebtsPolicy?.fallbackRoles}
+              >
+                <SupplierDebtPaymentsPage />
               </PermissionGuard>
             }
           />
