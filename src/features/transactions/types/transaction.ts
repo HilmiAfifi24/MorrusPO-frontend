@@ -13,10 +13,13 @@ export type TransactionListItemDto = {
 };
 
 export type TransactionItemDto = {
+  id: string;
   productId: string;
   productName: string;
   sku: string;
   qty: number;
+  returnedQty: number;
+  remainingQty: number;
   unitPrice: number;
   unitCost: number;
   discountAmount: number;
@@ -27,6 +30,19 @@ export type PaymentDto = {
   method: string;
   amount: number;
   referenceNumber: string | null;
+  createdAt: string;
+};
+
+export type TransactionReturnDto = {
+  id: string;
+  transactionItemId: string;
+  productId: string;
+  productName: string;
+  qty: number;
+  reason: string | null;
+  refundMethod: string;
+  processedBy: string;
+  processedByName: string;
   createdAt: string;
 };
 
@@ -44,9 +60,13 @@ export type TransactionDto = {
   discountTotal: number;
   taxTotal: number;
   grandTotal: number;
+  voidedBy: string | null;
+  voidedByName: string | null;
+  voidedReason: string | null;
   createdAt: string;
   items: TransactionItemDto[];
   payments: PaymentDto[];
+  returns: TransactionReturnDto[];
 };
 
 export type CheckoutItemRequest = {
@@ -73,4 +93,19 @@ export type CheckoutRequest = {
   grandTotal: number;
   items: CheckoutItemRequest[];
   payments: PaymentRequest[];
+};
+
+export type VoidTransactionRequest = {
+  reason: string;
+};
+
+export type RefundTransactionItemRequest = {
+  productId: string;
+  qty: number;
+};
+
+export type RefundTransactionRequest = {
+  refundMethod: "refund" | "exchange";
+  reason?: string | null;
+  items: RefundTransactionItemRequest[];
 };

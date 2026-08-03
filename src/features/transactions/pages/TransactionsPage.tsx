@@ -11,18 +11,11 @@ import { useOutlet } from "../../outlets/hooks/useOutlet";
 import { getErrorMessage } from "../../../utils/errors";
 import { getRecentTransactions } from "../api/transactionsApi";
 import type { TransactionListItemDto } from "../types/transaction";
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatDateTime(value: string) {
-  return new Date(value).toLocaleString("id-ID");
-}
+import {
+  formatCurrency,
+  formatDateTime,
+} from "../utils/formatters";
+import TransactionStatusBadge from "../components/TransactionStatusBadge";
 
 export default function TransactionsPage() {
   const { session } = useAuth();
@@ -157,9 +150,7 @@ export default function TransactionsPage() {
                     {formatCurrency(transaction.grandTotal)}
                   </td>
                   <td className="px-6 py-4">
-                    <span className="rounded-full bg-success-50 px-3 py-1 text-xs font-semibold text-success-700 dark:bg-success-500/10 dark:text-success-300">
-                      {transaction.status}
-                    </span>
+                    <TransactionStatusBadge status={transaction.status} />
                   </td>
                   <td className="px-6 py-4">
                     <Link

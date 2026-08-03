@@ -276,6 +276,24 @@ layer(base);
     @apply bg-gray-200 rounded-full dark:bg-gray-700;
   }
 }
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .app-no-print {
+    display: none !important;
+  }
+
+  .receipt-print-root {
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+}
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #344054;
 }
