@@ -51,8 +51,18 @@ export default function UserForm({
     [canAssignOwner, roles],
   );
 
+  const selectableOutlets = useMemo(
+    () =>
+      outlets.filter((outlet) => outlet.isActive || outlet.id === values.outletId),
+    [outlets, values.outletId],
+  );
+
   const selectedRoleName =
     roles.find((role) => role.id === values.roleId)?.name ?? null;
+
+  const selectedOutlet =
+    outlets.find((outlet) => outlet.id === values.outletId) ?? null;
+  const selectedOutletInactive = Boolean(selectedOutlet && !selectedOutlet.isActive);
 
   return (
     <FormCard
@@ -120,13 +130,19 @@ export default function UserForm({
               <option value="">
                 {isOwner(selectedRoleName) ? "Tidak perlu outlet untuk Owner" : "Pilih outlet"}
               </option>
-              {outlets.map((outlet) => (
+              {selectableOutlets.map((outlet) => (
                 <option key={outlet.id} value={outlet.id}>
                   {outlet.name}
+                  {!outlet.isActive ? " (nonaktif)" : ""}
                 </option>
               ))}
             </select>
             <FieldErrorText message={errors.outletId} />
+            {selectedOutletInactive ? (
+              <p className="mt-2 text-xs text-warning-700 dark:text-warning-300">
+                Outlet yang sedang terpasang sudah nonaktif. Pilih outlet aktif sebelum menyimpan.
+              </p>
+            ) : null}
           </label>
 
           {"password" in values ? (

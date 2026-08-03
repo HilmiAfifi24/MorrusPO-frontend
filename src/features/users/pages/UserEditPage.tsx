@@ -8,6 +8,7 @@ import type { RoleLookupDto } from "../../auth/types/role";
 import { getOutlets } from "../../outlets/api/outletsApi";
 import type { OutletLookupDto } from "../../outlets/types/outlet";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { getErrorMessage } from "../../../utils/errors";
 import UserForm from "../components/UserForm";
 import { getUserById, updateUser } from "../api/usersApi";
 import { validateUpdateUserForm } from "../schemas/userSchema";
@@ -55,7 +56,11 @@ export default function UserEditPage() {
         ]);
 
         setRoles(rolesResult);
-        setOutlets(outletsResult);
+        setOutlets(
+          outletsResult.filter(
+            (outlet) => outlet.isActive || outlet.id === userResult.outletId,
+          ),
+        );
         setUser(userResult);
         setValues({
           name: userResult.name,
@@ -65,14 +70,7 @@ export default function UserEditPage() {
           isActive: userResult.isActive,
         });
       } catch (requestError) {
-        const message =
-          typeof requestError === "object" &&
-          requestError &&
-          "message" in requestError &&
-          typeof requestError.message === "string"
-            ? requestError.message
-            : "Gagal memuat detail pengguna.";
-        setSubmitError(message);
+        setSubmitError(getErrorMessage(requestError, "Gagal memuat detail pengguna."));
       } finally {
         setIsLoading(false);
       }
@@ -133,14 +131,7 @@ export default function UserEditPage() {
         state: { successMessage: `Pengguna ${values.name} berhasil diperbarui.` },
       });
     } catch (requestError) {
-      const message =
-        typeof requestError === "object" &&
-        requestError &&
-        "message" in requestError &&
-        typeof requestError.message === "string"
-          ? requestError.message
-          : "Gagal memperbarui pengguna.";
-      setSubmitError(message);
+      setSubmitError(getErrorMessage(requestError, "Gagal memperbarui pengguna."));
     } finally {
       setIsSubmitting(false);
     }

@@ -8,6 +8,7 @@ import type { RoleLookupDto } from "../../auth/types/role";
 import { getOutlets } from "../../outlets/api/outletsApi";
 import type { OutletLookupDto } from "../../outlets/types/outlet";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { getErrorMessage } from "../../../utils/errors";
 import UserForm from "../components/UserForm";
 import { createUser } from "../api/usersApi";
 import { validateCreateUserForm } from "../schemas/userSchema";
@@ -42,20 +43,13 @@ export default function UserCreatePage() {
       try {
         const [rolesResult, outletsResult] = await Promise.all([getRoles(), getOutlets()]);
         setRoles(rolesResult);
-        setOutlets(outletsResult);
+        setOutlets(outletsResult.filter((outlet) => outlet.isActive));
 
         if (!canChooseOutlet && session?.outletId) {
           setValues((prev) => ({ ...prev, outletId: session.outletId ?? "" }));
         }
       } catch (requestError) {
-        const message =
-          typeof requestError === "object" &&
-          requestError &&
-          "message" in requestError &&
-          typeof requestError.message === "string"
-            ? requestError.message
-            : "Gagal memuat lookup role dan outlet.";
-        setSubmitError(message);
+        setSubmitError(getErrorMessage(requestError, "Gagal memuat lookup role dan outlet."));
       } finally {
         setIsLoading(false);
       }
@@ -112,14 +106,7 @@ export default function UserCreatePage() {
         state: { successMessage: `Pengguna ${values.name} berhasil dibuat.` },
       });
     } catch (requestError) {
-      const message =
-        typeof requestError === "object" &&
-        requestError &&
-        "message" in requestError &&
-        typeof requestError.message === "string"
-          ? requestError.message
-          : "Gagal membuat pengguna.";
-      setSubmitError(message);
+      setSubmitError(getErrorMessage(requestError, "Gagal membuat pengguna."));
     } finally {
       setIsSubmitting(false);
     }

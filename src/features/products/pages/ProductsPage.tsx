@@ -46,6 +46,17 @@ export default function ProductsPage() {
 
   const ownerMode = isOwner(session?.role);
   const canChangeOutlet = ownerMode;
+  const selectableOutlets = useMemo(
+    () =>
+      outlets.filter((outlet) => {
+        if (outlet.isActive) {
+          return true;
+        }
+
+        return !canChangeOutlet && outlet.id === session?.outletId;
+      }),
+    [canChangeOutlet, outlets, session?.outletId],
+  );
 
   const categoryNameById = useMemo(
     () =>
@@ -136,7 +147,7 @@ export default function ProductsPage() {
         description="Listing produk fase 2 mengambil stok langsung dari backend berdasarkan outlet yang aktif."
         actions={
           <>
-            {(ownerMode || session?.role === "Admin") && outlets.length > 0 ? (
+            {(ownerMode || session?.role === "Admin") && selectableOutlets.length > 0 ? (
               <select
                 value={selectedOutletId}
                 disabled={!canChangeOutlet && Boolean(session?.outletId)}
@@ -146,9 +157,10 @@ export default function ProductsPage() {
                 <option value="">
                   {ownerMode ? "Pilih outlet" : "Outlet aktif pengguna"}
                 </option>
-                {outlets.map((outlet) => (
+                {selectableOutlets.map((outlet) => (
                   <option key={outlet.id} value={outlet.id}>
                     {outlet.name}
+                    {!outlet.isActive ? " (nonaktif)" : ""}
                   </option>
                 ))}
               </select>
