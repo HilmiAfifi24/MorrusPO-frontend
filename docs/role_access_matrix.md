@@ -31,28 +31,25 @@ Dokumen ini menjadi sumber referensi implementasi akses menu, route guard, dan p
 - Transaksi
 - Produk
 - Kategori
-- Pengguna
-- Cabang
-
-### Placeholder
-
 - Stok
 - Transfer Stok
 - Supplier
 - Purchase Order
 - Utang Supplier
 - Konsinyasi
+- Pengguna
+- Cabang
 
 ## Matrix Menu Per Role
 
 | Role | Dashboard | Sesi Kasir | POS Kasir | Transaksi | Produk | Kategori | Stok | Transfer Stok | Supplier | Purchase Order | Utang Supplier | Konsinyasi | Pengguna | Cabang |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Owner | Active | Active | Active | Active | Active | Active | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Active | Active |
-| Admin | Active | Active | Active | Active | Active | Active | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Active | Active |
+| Owner | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active |
+| Admin | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active | Active |
 | Kasir | Active | Active | Active | Active | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden |
-| Gudang | Active | Hidden | Hidden | Hidden | Active | Active | Placeholder | Placeholder | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden |
-| Keuangan | Active | Hidden | Hidden | Active | Hidden | Hidden | Hidden | Hidden | Placeholder | Placeholder | Placeholder | Placeholder | Hidden | Hidden |
-| KepalaCabang | Active | Active | Active | Active | Active | Active | Placeholder | Placeholder | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden |
+| Gudang | Active | Hidden | Hidden | Hidden | Active | Active | Active | Active | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden |
+| Keuangan | Active | Hidden | Hidden | Active | Hidden | Hidden | Hidden | Hidden | Active | Active | Active | Active | Hidden | Hidden |
+| KepalaCabang | Active | Active | Active | Active | Active | Active | Active | Active | Hidden | Hidden | Hidden | Hidden | Hidden | Hidden |
 
 ## Matrix Aksi Per Role
 
@@ -99,7 +96,7 @@ Setiap menu memakai kombinasi:
 
 ### Placeholder
 
-- Menu muncul dengan badge `Soon`.
+- Dipakai hanya untuk modul di luar scope frontend aktif saat ini.
 - Halaman boleh dibuka jika role/permission cocok.
 - Isi halaman menampilkan placeholder modul, bukan akses ditolak.
 

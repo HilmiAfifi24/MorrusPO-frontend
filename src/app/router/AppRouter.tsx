@@ -9,6 +9,10 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import SignInPage from "../../features/auth/pages/SignInPage";
 import CategoriesPage from "../../features/categories/pages/CategoriesPage";
 import ConsignmentsPage from "../../features/consignments/pages/ConsignmentsPage";
+import ConsignmentCreatePage from "../../features/consignments/pages/ConsignmentCreatePage";
+import ConsignmentDetailPage from "../../features/consignments/pages/ConsignmentDetailPage";
+import ConsignmentSettlementsPage from "../../features/consignments/pages/ConsignmentSettlementsPage";
+import ConsignmentSettlementDetailPage from "../../features/consignments/pages/ConsignmentSettlementDetailPage";
 import DashboardPage from "../../features/dashboard/pages/DashboardPage";
 import SupplierDebtsPage from "../../features/debts/pages/SupplierDebtsPage";
 import SupplierDebtPaymentsPage from "../../features/debts/pages/SupplierDebtPaymentsPage";
@@ -287,9 +291,52 @@ export default function AppRouter() {
               <PermissionGuard
                 requiredPermissions={consignmentsPolicy?.requiredPermissions}
                 fallbackRoles={consignmentsPolicy?.fallbackRoles}
-                allowPlaceholder
               >
                 <ConsignmentsPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="consignments/create"
+            element={
+              <PermissionGuard
+                requiredPermissions={consignmentsPolicy?.requiredPermissions}
+                fallbackRoles={consignmentsPolicy?.fallbackRoles}
+              >
+                <ConsignmentCreatePage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="consignments/:id"
+            element={
+              <PermissionGuard
+                requiredPermissions={consignmentsPolicy?.requiredPermissions}
+                fallbackRoles={consignmentsPolicy?.fallbackRoles}
+              >
+                <ConsignmentDetailPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="consignment-settlements"
+            element={
+              <PermissionGuard
+                requiredPermissions={consignmentsPolicy?.requiredPermissions}
+                fallbackRoles={consignmentsPolicy?.fallbackRoles}
+              >
+                <ConsignmentSettlementsPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="consignment-settlements/:id"
+            element={
+              <PermissionGuard
+                requiredPermissions={consignmentsPolicy?.requiredPermissions}
+                fallbackRoles={consignmentsPolicy?.fallbackRoles}
+              >
+                <ConsignmentSettlementDetailPage />
               </PermissionGuard>
             }
           />

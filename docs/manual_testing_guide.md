@@ -323,13 +323,23 @@ Catatan:
 | TX-09 | Refund over remaining | Refund melebihi sisa qty | Backend menolak |
 | TX-10 | Void after refund | Coba void transaksi yang sudah ada refund | Backend menolak |
 
-## 8.10 Placeholder Modules
+## 8.10 Consignments
 
 | ID | Skenario | Langkah | Expected Result |
 |---|---|---|---|
-| PH-01 | Inventory page | Buka `/inventory` | Tampil placeholder |
-| PH-02 | Stock transfer page | Buka `/stock-transfers` | Tampil placeholder |
-| PH-03 | Consignments page | Buka `/consignments` | Tampil placeholder |
+| CON-01 | Open consignments list | Buka `/consignments` | Tabel tanda terima tampil |
+| CON-02 | Open create receipt | Klik `Buat tanda terima` | Masuk ke `/consignments/create` |
+| CON-03 | Create receipt success | Isi form valid lalu submit | Redirect ke detail receipt |
+| CON-04 | Receive receipt | Proses status `received` | Status berubah dan receipt final |
+| CON-05 | Open settlements | Klik `Settlement` | Masuk ke `/consignment-settlements` |
+| CON-06 | Create settlement | Pilih supplier dengan unpaid sales | Draft settlement berhasil dibuat |
+| CON-07 | Settle supplier | Proses status `settled` | Status settlement menjadi `settled` |
+
+## 8.11 Placeholder Modules
+
+| ID | Skenario | Langkah | Expected Result |
+|---|---|---|---|
+| PH-01 | Future placeholder check | Buka modul yang memang belum aktif di roadmap setelah fase 6 | Tampil placeholder sesuai role |
 
 ---
 
@@ -345,6 +355,7 @@ Jika waktu sempit, jalankan urutan ini:
 6. `POS-03`, `POS-06`, `POS-10`, `POS-13`
 7. `TX-01`, `TX-03`, `TX-04`
 8. `TX-05` atau `TX-07`
+9. `CON-01` sampai `CON-04`
 
 ---
 
@@ -353,11 +364,14 @@ Jika waktu sempit, jalankan urutan ini:
 Hal berikut saat ini dianggap expected:
 
 - owner harus memilih outlet di beberapa halaman operasional
-- modul `konsinyasi` masih placeholder
 - POS saat ini memakai pencarian client-side, bukan search endpoint khusus
 - print struk masih memakai `window.print()` browser
 - refund saat ini masih `refund dasar`, belum ada refund nominal per payment method
 - void dan refund belum punya approval flow terpisah
+
+Panduan detail frontend fase 6:
+
+- `docs/manual_testing_phase_6.md`
 
 ---
 

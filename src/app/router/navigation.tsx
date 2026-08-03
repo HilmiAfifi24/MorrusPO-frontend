@@ -137,7 +137,7 @@ export const appNavigation: NavItem[] = [
     icon: <BoxCubeIcon />,
     requiredPermissions: ["consignment.manage"],
     fallbackRoles: consignmentRoles,
-    status: "placeholder",
+    status: "active",
   },
   {
     label: "Pengguna",

@@ -1,0 +1,85 @@
+export type ConsignmentItemDto = {
+  productId: string;
+  productName: string;
+  sku: string;
+  qty: number;
+  unitCost: number;
+  unitPrice: number;
+};
+
+export type ConsignmentDto = {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  outletId: string;
+  outletName: string;
+  consignmentNumber: string;
+  receiveDate: string;
+  status: "draft" | "received" | "cancelled" | string;
+  items: ConsignmentItemDto[];
+};
+
+export type CreateConsignmentItemRequest = {
+  productId: string;
+  qty: number;
+  unitCost: number;
+  unitPrice: number;
+};
+
+export type CreateConsignmentRequest = {
+  supplierId: string;
+  outletId: string;
+  items: CreateConsignmentItemRequest[];
+};
+
+export type UpdateConsignmentStatusRequest = {
+  status: "received" | "cancelled" | string;
+};
+
+export type ConsignmentSaleDto = {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  transactionItemId: string;
+  transactionNumber: string;
+  productName: string;
+  qty: number;
+  unitCost: number;
+  totalAmount: number;
+  status: "unpaid" | "paid" | string;
+  createdAt: string;
+};
+
+export type ConsignmentSettlementDto = {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  outletId: string;
+  outletName: string;
+  settlementNumber: string;
+  settlementDate: string;
+  totalAmount: number;
+  status: "draft" | "settled" | "cancelled" | string;
+  sales: ConsignmentSaleDto[];
+};
+
+export type CreateConsignmentSettlementRequest = {
+  supplierId: string;
+  outletId: string;
+};
+
+export type UpdateConsignmentSettlementStatusRequest = {
+  status: "settled" | "cancelled" | string;
+};
+
+export type ConsignmentFormRow = {
+  productId: string;
+  qty: string;
+  unitCost: string;
+  unitPrice: string;
+};
+
+export type ConsignmentFormValues = {
+  supplierId: string;
+  items: ConsignmentFormRow[];
+};
