@@ -28,6 +28,7 @@ export default function PermissionGuard({
       description="Halaman ini belum tersedia untuk role Anda pada Fase 0 MorrusPOS."
       actionLabel="Kembali ke dashboard"
       actionHref="/dashboard"
+      fullScreen={false}
     />
   );
 }

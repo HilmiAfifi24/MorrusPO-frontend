@@ -18,6 +18,8 @@ function normalizeError(status: number, payload: unknown): AppApiError {
     const message =
       typeof maybePayload.message === "string"
         ? maybePayload.message
+        : typeof maybePayload.error === "string"
+          ? maybePayload.error
         : typeof maybePayload.title === "string"
           ? maybePayload.title
           : "Terjadi kesalahan saat memproses permintaan.";

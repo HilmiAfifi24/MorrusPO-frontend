@@ -5,14 +5,20 @@ export default function AppErrorState({
   description,
   actionLabel,
   actionHref,
+  fullScreen = true,
 }: {
   title: string;
   description: string;
   actionLabel?: string;
   actionHref?: string;
+  fullScreen?: boolean;
 }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 dark:bg-gray-950">
+    <div
+      className={`flex items-center justify-center bg-gray-50 px-4 dark:bg-gray-950 ${
+        fullScreen ? "min-h-screen" : "min-h-[360px]"
+      }`}
+    >
       <div className="w-full max-w-xl rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-theme-sm dark:border-gray-800 dark:bg-gray-900">
         <span className="inline-flex rounded-full bg-error-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-error-700 dark:bg-error-500/10 dark:text-error-300">
           MorrusPOS

@@ -1,1 +1,1 @@
-export {};
+export { default as AppTableShell } from "./AppTableShell";

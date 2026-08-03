@@ -3,6 +3,7 @@ import { ScrollToTop } from "../../components/common/ScrollToTop";
 import AppErrorState from "../../components/ui/AppErrorState";
 import AuthGuard from "../guards/AuthGuard";
 import GuestGuard from "../guards/GuestGuard";
+import PermissionGuard from "../guards/PermissionGuard";
 import AuthLayout from "../../components/layout/AuthLayout";
 import CashierLayout from "../../components/layout/CashierLayout";
 import DashboardLayout from "../../components/layout/DashboardLayout";
@@ -17,6 +18,9 @@ import PosPage from "../../features/pos/pages/PosPage";
 import ProductsPage from "../../features/products/pages/ProductsPage";
 import PurchaseOrdersPage from "../../features/purchase-orders/pages/PurchaseOrdersPage";
 import SuppliersPage from "../../features/suppliers/pages/SuppliersPage";
+import ChangePasswordPage from "../../features/users/pages/ChangePasswordPage";
+import UserCreatePage from "../../features/users/pages/UserCreatePage";
+import UserEditPage from "../../features/users/pages/UserEditPage";
 import UsersPage from "../../features/users/pages/UsersPage";
 
 export default function AppRouter() {
@@ -53,8 +57,39 @@ export default function AppRouter() {
           <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
           <Route path="supplier-debts" element={<SupplierDebtsPage />} />
           <Route path="consignments" element={<ConsignmentsPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="outlets" element={<OutletsPage />} />
+          <Route
+            path="users"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <UsersPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="users/create"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <UserCreatePage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="users/:id/edit"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <UserEditPage />
+              </PermissionGuard>
+            }
+          />
+          <Route path="profile/change-password" element={<ChangePasswordPage />} />
+          <Route
+            path="outlets"
+            element={
+              <PermissionGuard requiredRoles={["Owner", "Admin"]}>
+                <OutletsPage />
+              </PermissionGuard>
+            }
+          />
         </Route>
 
         <Route
