@@ -1,12 +1,12 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
 
 export interface StorefrontOutlet {
   id: string;
   code: string; // outlet slug/code in URL
   name: string;
-  address: string;
-  isOpen: boolean;
-  phone?: string;
+  address?: string | null;
+  isOpen?: boolean;
+  phone?: string | null;
 }
 
 export interface StorefrontProduct {
@@ -42,6 +42,7 @@ interface StorefrontContextType {
   updateCartQty: (productId: string, qty: number) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
+  syncCartWithCatalog: (freshProducts: { id: string; qtyOnHand: number; basePrice?: number }[]) => void;
   customerInfo: CustomerInfo | null;
   setCustomerInfo: (info: CustomerInfo | null) => void;
   cartSubtotal: number;
@@ -139,6 +140,28 @@ export function StorefrontProvider({ children }: { children: ReactNode }) {
     setCart([]);
   };
 
+  const syncCartWithCatalog = useCallback((freshProducts: { id: string; qtyOnHand: number; basePrice?: number }[]) => {
+    setCart((prev) =>
+      prev
+        .map((item) => {
+          const fresh = freshProducts.find((p) => p.id === item.product.id);
+          if (!fresh) return null; // Produk tidak ada lagi di catalog
+          const cappedQty = Math.min(item.qty, fresh.qtyOnHand);
+          if (cappedQty <= 0) return null; // Stok habis, hapus dari cart
+          return {
+            ...item,
+            qty: cappedQty,
+            product: {
+              ...item.product,
+              qtyOnHand: fresh.qtyOnHand,
+              price: fresh.basePrice ?? item.product.price,
+            },
+          };
+        })
+        .filter((item): item is CartItem => item !== null)
+    );
+  }, []);
+
   const cartSubtotal = cart.reduce((acc, item) => acc + item.product.price * item.qty, 0);
   const cartTotalItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
@@ -152,6 +175,7 @@ export function StorefrontProvider({ children }: { children: ReactNode }) {
         updateCartQty,
         removeFromCart,
         clearCart,
+        syncCartWithCatalog,
         customerInfo,
         setCustomerInfo,
         cartSubtotal,

@@ -1,36 +1,64 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
-import { useStorefront, type StorefrontProduct } from "../../../context/StorefrontContext";
-
-const DUMMY_PRODUCTS: StorefrontProduct[] = [
-  { id: "101", name: "Classic Espresso", sku: "PRD-ESP-01", price: 22000, unit: "Cup", qtyOnHand: 15, description: "Espresso shot murni yang diekstrak secara presisi dari biji kopi arabika pilihan khas Morrus Coffee.", categoryName: "Coffee", imageUrl: "☕" },
-  { id: "102", name: "Iced Cafe Latte", sku: "PRD-LAT-02", price: 28000, unit: "Cup", qtyOnHand: 4, description: "Perpaduan shot espresso arabika morrus dengan susu segar dingin yang creamy dan foam tebal.", categoryName: "Coffee", imageUrl: "🥛" },
-  { id: "103", name: "Signature Matcha Latte", sku: "PRD-MAT-03", price: 30000, unit: "Cup", qtyOnHand: 12, description: "Matcha khas Uji Jepang kualitas premium dipadu dengan susu segar manis dan disajikan dingin.", categoryName: "Non-Coffee", imageUrl: "🍵" },
-  { id: "104", name: "Butter Croissant", sku: "PRD-CRO-04", price: 25000, unit: "Pcs", qtyOnHand: 0, description: "Croissant gurih berlapis mentega Prancis, dipanggang setiap pagi, disajikan renyah.", categoryName: "Pastry", imageUrl: "🥐" },
-  { id: "105", name: "Hot Cappuccino", sku: "PRD-CAP-05", price: 28000, unit: "Cup", qtyOnHand: 20, description: "Minuman espresso klasik dengan foam susu tebal, disajikan hangat dengan taburan bubuk cokelat.", categoryName: "Coffee", imageUrl: "☕" },
-  { id: "106", name: "Iced Lemon Tea", sku: "PRD-LTE-06", price: 20000, unit: "Cup", qtyOnHand: 3, description: "Teh hitam dingin dipadu dengan perasan lemon segar alami untuk melepas dahaga Anda.", categoryName: "Non-Coffee", imageUrl: "🍹" },
-];
+import { useStorefront } from "../../../context/StorefrontContext";
+import { useCatalog } from "../hooks/useCatalog";
+import { getCategoryEmoji } from "../utils/catalogUtils";
 
 export default function ProductDetailPage() {
   const { outletCode, productId } = useParams<{ outletCode: string; productId: string }>();
   const navigate = useNavigate();
   const { addToCart, cart } = useStorefront();
+  const { products, isLoading, error } = useCatalog(outletCode);
 
-  const product = DUMMY_PRODUCTS.find((p) => p.id === productId);
+  const product = products.find((p) => p.id === productId);
   const inCartQty = cart.find((item) => item.product.id === productId)?.qty ?? 0;
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState("");
 
+  // Reset qty saat produk berubah
+  useEffect(() => {
+    setQty(1);
+  }, [productId]);
+
   const formatCurrency = (val: number) =>
     new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center py-16 space-y-4">
+        <div className="h-10 w-10 rounded-full border-2 border-t-transparent animate-spin"
+          style={{ borderColor: "rgba(245,124,0,0.3)", borderTopColor: "#f57c00" }} />
+        <p className="text-sm font-outfit" style={{ color: "rgba(255,255,255,0.4)" }}>Memuat detail produk...</p>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center py-16 px-6 text-center font-outfit space-y-4">
+        <div className="text-5xl">⚠️</div>
+        <h3 className="text-base font-bold text-white">Gagal Memuat Menu</h3>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>{error}</p>
+        <Link to={`/shop/o/${outletCode}/menu`}
+          className="mt-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
+          style={{ background: "rgba(245,124,0,0.2)", border: "1px solid rgba(245,124,0,0.3)" }}>
+          Kembali ke Menu
+        </Link>
+      </div>
+    );
+  }
+
+  // Not found
   if (!product) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center font-outfit">
+      <div className="flex-1 flex flex-col items-center justify-center py-16 px-6 text-center font-outfit">
         <div className="text-5xl mb-4">🔍</div>
         <h3 className="text-lg font-bold text-white">Produk Tidak Ditemukan</h3>
-        <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.4)" }}>Menu yang Anda cari tidak tersedia.</p>
-        <Link to={`/shop/o/${outletCode}/menu`} className="mt-6 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
+        <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.4)" }}>Menu yang Anda cari tidak tersedia di outlet ini.</p>
+        <Link to={`/shop/o/${outletCode}/menu`}
+          className="mt-6 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
           style={{ background: "rgba(245,124,0,0.2)", border: "1px solid rgba(245,124,0,0.3)" }}>
           Kembali ke Menu
         </Link>
@@ -41,12 +69,23 @@ export default function ProductDetailPage() {
   const isOos = product.qtyOnHand === 0;
   const maxAvailable = product.qtyOnHand - inCartQty;
   const isCartFull = maxAvailable <= 0;
+  const emoji = getCategoryEmoji(product.categoryName);
 
   const handleIncrement = () => { if (qty < maxAvailable) setQty((prev) => prev + 1); };
   const handleDecrement = () => { if (qty > 1) setQty((prev) => prev - 1); };
+
   const handleAddToCart = () => {
     if (isOos || isCartFull) return;
-    addToCart(product, qty, notes);
+    addToCart({
+      id: product.id,
+      name: product.name,
+      sku: product.sku,
+      price: product.basePrice,
+      unit: product.unit,
+      qtyOnHand: product.qtyOnHand,
+      categoryName: product.categoryName ?? undefined,
+      imageUrl: emoji,
+    }, qty, notes);
     navigate(`/shop/o/${outletCode}/menu`);
   };
 
@@ -73,11 +112,8 @@ export default function ProductDetailPage() {
         {/* Left: Product Visual */}
         <div className="w-full aspect-square rounded-3xl flex items-center justify-center text-[120px] relative overflow-hidden"
           style={{ background: "linear-gradient(145deg, rgba(245,124,0,0.12) 0%, rgba(0,0,0,0.2) 100%)", border: "1px solid rgba(245,124,0,0.15)" }}>
-          {/* Decorative glow */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at center, rgba(245,124,0,0.15), transparent 70%)" }} />
-          <span className="relative select-none" style={{ filter: "drop-shadow(0 10px 40px rgba(245,124,0,0.3))" }}>{product.imageUrl}</span>
-
-          {/* OOS badge */}
+          <span className="relative select-none" style={{ filter: "drop-shadow(0 10px 40px rgba(245,124,0,0.3))" }}>{emoji}</span>
           {isOos && (
             <div className="absolute inset-0 flex items-center justify-center"
               style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}>
@@ -91,42 +127,48 @@ export default function ProductDetailPage() {
 
           {/* Category + Name + Price */}
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
-              style={{ background: "rgba(245,124,0,0.15)", color: "#ffa726", border: "1px solid rgba(245,124,0,0.2)" }}>
-              {product.categoryName}
-            </span>
+            {product.categoryName && (
+              <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
+                style={{ background: "rgba(245,124,0,0.15)", color: "#ffa726", border: "1px solid rgba(245,124,0,0.2)" }}>
+                {product.categoryName}
+              </span>
+            )}
             <h2 className="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
               {product.name}
             </h2>
             <p className="text-2xl font-extrabold mt-2" style={{ color: "#f57c00" }}>
-              {formatCurrency(product.price)}
+              {formatCurrency(product.basePrice)}
+            </p>
+            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
+              per {product.unit}
             </p>
 
             {/* Availability badges */}
             <div className="flex flex-wrap items-center gap-2 mt-3">
               {isOos ? (
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: "rgba(239,68,68,0.12)", color: "#f87171", border: "1px solid rgba(239,68,68,0.2)" }}>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                  style={{ background: "rgba(239,68,68,0.12)", color: "#f87171", border: "1px solid rgba(239,68,68,0.2)" }}>
                   Stok Habis
                 </span>
               ) : (
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: "rgba(34,197,94,0.1)", color: "#4ade80", border: "1px solid rgba(34,197,94,0.2)" }}>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                  style={{ background: "rgba(34,197,94,0.1)", color: "#4ade80", border: "1px solid rgba(34,197,94,0.2)" }}>
                   ✓ Tersedia ({product.qtyOnHand} {product.unit})
                 </span>
               )}
               {inCartQty > 0 && (
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: "rgba(245,124,0,0.1)", color: "#ffa726", border: "1px solid rgba(245,124,0,0.2)" }}>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                  style={{ background: "rgba(245,124,0,0.1)", color: "#ffa726", border: "1px solid rgba(245,124,0,0.2)" }}>
                   🛒 {inCartQty} di Keranjang
                 </span>
               )}
             </div>
           </div>
 
-          {/* Description */}
-          <div className="py-4 space-y-2" style={{ borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-            <h4 className="text-[10px] font-black uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Deskripsi</h4>
-            <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
-              {product.description}
-            </p>
+          {/* SKU */}
+          <div className="py-3 space-y-1" style={{ borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+            <h4 className="text-[10px] font-black uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Kode Produk</h4>
+            <p className="text-sm font-mono" style={{ color: "rgba(255,255,255,0.5)" }}>{product.sku}</p>
           </div>
 
           {/* Notes input */}
@@ -147,34 +189,29 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Quantity picker + Add to Cart */}
+          {/* Qty picker + Add to Cart */}
           <div className="space-y-4">
             {!isOos && !isCartFull && (
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.6)" }}>Jumlah Pesanan:</span>
-                <div className="flex items-center space-x-4 p-1.5 rounded-2xl" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <button
-                    onClick={handleDecrement}
-                    disabled={qty <= 1}
+                <div className="flex items-center space-x-4 p-1.5 rounded-2xl"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <button onClick={handleDecrement} disabled={qty <= 1}
                     className="h-9 w-9 rounded-xl flex items-center justify-center font-bold text-lg transition-all active:scale-90"
-                    style={{ background: qty <= 1 ? "transparent" : "rgba(255,255,255,0.08)", color: qty <= 1 ? "rgba(255,255,255,0.2)" : "white" }}
-                  >
+                    style={{ background: qty <= 1 ? "transparent" : "rgba(255,255,255,0.08)", color: qty <= 1 ? "rgba(255,255,255,0.2)" : "white" }}>
                     −
                   </button>
                   <span className="text-base font-black text-white w-6 text-center">{qty}</span>
-                  <button
-                    onClick={handleIncrement}
-                    disabled={qty >= maxAvailable}
+                  <button onClick={handleIncrement} disabled={qty >= maxAvailable}
                     className="h-9 w-9 rounded-xl flex items-center justify-center font-bold text-lg transition-all active:scale-90"
-                    style={{ background: qty >= maxAvailable ? "transparent" : "rgba(245,124,0,0.2)", color: qty >= maxAvailable ? "rgba(255,255,255,0.2)" : "#f57c00" }}
-                  >
+                    style={{ background: qty >= maxAvailable ? "transparent" : "rgba(245,124,0,0.2)", color: qty >= maxAvailable ? "rgba(255,255,255,0.2)" : "#f57c00" }}>
                     +
                   </button>
                 </div>
               </div>
             )}
 
-            {/* CTA Button */}
+            {/* CTA */}
             {isOos ? (
               <button disabled className="w-full py-4 px-6 rounded-2xl font-bold text-base cursor-not-allowed"
                 style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.25)" }}>
@@ -186,21 +223,17 @@ export default function ProductDetailPage() {
                   style={{ background: "rgba(239,68,68,0.1)", color: "#f87171", border: "1px solid rgba(239,68,68,0.15)" }}>
                   Semua stok sudah ditambahkan ke keranjang.
                 </p>
-                <Link
-                  to={`/shop/o/${outletCode}/cart`}
+                <Link to={`/shop/o/${outletCode}/cart`}
                   className="block w-full text-center py-4 px-6 rounded-2xl font-bold text-base text-white transition-all active:scale-[0.98]"
-                  style={{ background: "linear-gradient(135deg, #ffa726, #f57c00)", boxShadow: "0 20px 60px -10px rgba(245,124,0,0.4)" }}
-                >
+                  style={{ background: "linear-gradient(135deg, #ffa726, #f57c00)", boxShadow: "0 20px 60px -10px rgba(245,124,0,0.4)" }}>
                   Lihat Keranjang Belanja →
                 </Link>
               </div>
             ) : (
-              <button
-                onClick={handleAddToCart}
+              <button onClick={handleAddToCart}
                 className="w-full py-4 px-6 rounded-2xl font-bold text-base text-white transition-all active:scale-[0.98]"
-                style={{ background: "linear-gradient(135deg, #ffa726, #f57c00)", boxShadow: "0 20px 60px -10px rgba(245,124,0,0.4)" }}
-              >
-                Tambah ke Keranjang • {formatCurrency(product.price * qty)}
+                style={{ background: "linear-gradient(135deg, #ffa726, #f57c00)", boxShadow: "0 20px 60px -10px rgba(245,124,0,0.4)" }}>
+                Tambah ke Keranjang • {formatCurrency(product.basePrice * qty)}
               </button>
             )}
           </div>
