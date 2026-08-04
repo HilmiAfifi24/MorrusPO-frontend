@@ -163,6 +163,46 @@ layer(base);
   --z-index-9999: 9999;
   --z-index-99999: 99999;
   --z-index-999999: 999999;
+
+  /* ── Storefront Brand: Warm Amber / Coffee Brown ── */
+  --color-storefront-primary-50:  #fffbf5;
+  --color-storefront-primary-100: #fff3e0;
+  --color-storefront-primary-200: #ffe0b2;
+  --color-storefront-primary-300: #ffcc80;
+  --color-storefront-primary-400: #ffa726;
+  --color-storefront-primary-500: #f57c00;
+  --color-storefront-primary-600: #e65100;
+  --color-storefront-primary-700: #bf360c;
+  --color-storefront-primary-800: #8d2400;
+  --color-storefront-primary-900: #5d1500;
+  --color-storefront-primary-950: #2e0a00;
+
+  /* ── Storefront Accent: Coffee Dark Brown ── */
+  --color-sf-coffee-50:  #faf5f0;
+  --color-sf-coffee-100: #f0e6d6;
+  --color-sf-coffee-200: #ddc9a8;
+  --color-sf-coffee-300: #c5a678;
+  --color-sf-coffee-400: #b08050;
+  --color-sf-coffee-500: #8b5e3c;
+  --color-sf-coffee-600: #6d452a;
+  --color-sf-coffee-700: #4e2f18;
+  --color-sf-coffee-800: #311c0d;
+  --color-sf-coffee-900: #1c0e05;
+  --color-sf-coffee-950: #0d0602;
+
+  /* ── Storefront Accent: Warm Cream ── */
+  --color-sf-cream-50:  #fffef9;
+  --color-sf-cream-100: #fefcf0;
+  --color-sf-cream-200: #fdf7dc;
+  --color-sf-cream-300: #faf0c0;
+  --color-sf-cream-400: #f5e494;
+  --color-sf-cream-500: #edd060;
+
+  /* ── Storefront Shadow & Glow Tokens ── */
+  --shadow-storefront-card:      0 2px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-storefront-premium:   0 20px 60px -10px rgba(245,124,0,0.30), 0 4px 16px rgba(245,124,0,0.15);
+  --shadow-storefront-card-dark: 0 4px 30px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.25);
+  --shadow-storefront-glow:      0 0 40px rgba(245,124,0,0.20);
 }
 
 /*

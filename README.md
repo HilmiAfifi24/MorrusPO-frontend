@@ -8,10 +8,306 @@ Frontend untuk **MorrusPOS**, sistem POS dan manajemen operasional UMKM yang men
 - utang usaha
 - konsinyasi
 - dashboard operasional
+- customer ordering (storefront publik)
 
 Saat ini frontend masih dalam tahap transformasi dari template **TailAdmin React** menjadi aplikasi MorrusPOS yang terintegrasi dengan backend ASP.NET Core.
 
 ![MorrusPOS Frontend Preview](./banner.png)
+
+---
+
+## Hak Akses Per Role
+
+Sistem MorrusPOS menggunakan sistem berbasis **Role + Permission**. Setiap role memiliki kombinasi halaman yang bisa diakses dan aksi yang boleh dilakukan.
+
+### Daftar Role
+
+| Role | Keterangan |
+|---|---|
+| `Owner` | Pemilik usaha. Akses penuh ke seluruh sistem. |
+| `Admin` | Administrator. Akses hampir penuh, setara Owner. |
+| `KepalaCabang` | Kepala Cabang. Mengelola operasional kasir & stok cabang. |
+| `Kasir` | Operator kasir. Fokus pada transaksi penjualan harian. |
+| `Gudang` | Staff gudang. Fokus pada pengelolaan stok dan produk. |
+| `Keuangan` | Staff keuangan. Fokus pada laporan, supplier, dan konsinyasi. |
+| *(Publik)* | Pelanggan tanpa akun. Hanya bisa mengakses halaman Storefront. |
+
+---
+
+### Detail Akses Per Menu
+
+#### 🏠 Dashboard
+**Route:** `/dashboard`
+
+| Role | Akses |
+|---|---|
+| Owner | ✅ |
+| Admin | ✅ |
+| KepalaCabang | ✅ |
+| Kasir | ✅ |
+| Gudang | ✅ |
+| Keuangan | ✅ |
+
+> Semua pengguna yang sudah login dapat melihat dashboard. Konten dashboard bisa berbeda tergantung role.
+
+---
+
+#### 🖥️ Sesi Kasir
+**Route:** `/cashier/session`
+**Permission:** `transaction.create`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Buka & tutup sesi kasir, lihat semua sesi |
+| Admin | ✅ | Buka & tutup sesi kasir, lihat semua sesi |
+| KepalaCabang | ✅ | Buka & tutup sesi kasir di cabangnya |
+| Kasir | ✅ | Buka & tutup sesi kasir sendiri |
+| Gudang | ❌ | — |
+| Keuangan | ❌ | — |
+
+---
+
+#### 🛒 POS Kasir
+**Route:** `/pos`
+**Permission:** `transaction.create`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Input transaksi, pilih produk, checkout, cetak struk |
+| Admin | ✅ | Input transaksi, pilih produk, checkout, cetak struk |
+| KepalaCabang | ✅ | Input transaksi, pilih produk, checkout, cetak struk |
+| Kasir | ✅ | Input transaksi, pilih produk, checkout, cetak struk |
+| Gudang | ❌ | — |
+| Keuangan | ❌ | — |
+
+---
+
+#### 📋 Transaksi (Riwayat)
+**Route:** `/transactions`, `/transactions/:id`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat semua transaksi, detail transaksi, void transaksi |
+| Admin | ✅ | Lihat semua transaksi, detail transaksi, void transaksi |
+| KepalaCabang | ✅ | Lihat transaksi cabang, detail transaksi |
+| Kasir | ✅ | Lihat transaksi yang dibuat sendiri |
+| Gudang | ❌ | — |
+| Keuangan | ✅ | Lihat semua transaksi untuk keperluan laporan |
+
+---
+
+#### 📦 Produk
+**Route:** `/products`, `/products/create`, `/products/:id/edit`
+**Permission:** `product.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat, tambah, edit, nonaktifkan produk |
+| Admin | ✅ | Lihat, tambah, edit, nonaktifkan produk |
+| KepalaCabang | ✅ | Lihat dan edit produk cabang |
+| Kasir | ❌ | — |
+| Gudang | ✅ | Lihat, tambah, edit produk (master data stok) |
+| Keuangan | ❌ | — |
+
+---
+
+#### 🗂️ Kategori
+**Route:** `/categories`
+**Permission:** `product.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat, tambah, edit, hapus kategori |
+| Admin | ✅ | Lihat, tambah, edit, hapus kategori |
+| KepalaCabang | ✅ | Lihat kategori |
+| Kasir | ❌ | — |
+| Gudang | ✅ | Lihat, tambah, edit kategori |
+| Keuangan | ❌ | — |
+
+---
+
+#### 📊 Stok (Inventori)
+**Route:** `/inventory`, `/stock-opnames`, `/stock-opnames/create`, `/stock-opnames/:id`
+**Permission:** `stock.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat stok, buat & lihat stock opname, audit stok |
+| Admin | ✅ | Lihat stok, buat & lihat stock opname, audit stok |
+| KepalaCabang | ✅ | Lihat stok cabang, buat stock opname cabang |
+| Kasir | ❌ | — |
+| Gudang | ✅ | Lihat stok, buat & kelola stock opname |
+| Keuangan | ❌ | — |
+
+---
+
+#### 🔄 Transfer Stok
+**Route:** `/stock-transfers/outgoing`, `/stock-transfers/incoming`, `/stock-transfers/:id`
+**Permission:** `stock.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Buat & lihat transfer keluar, konfirmasi transfer masuk |
+| Admin | ✅ | Buat & lihat transfer keluar, konfirmasi transfer masuk |
+| KepalaCabang | ✅ | Lihat & konfirmasi transfer masuk ke cabang |
+| Kasir | ❌ | — |
+| Gudang | ✅ | Buat transfer keluar, konfirmasi transfer masuk |
+| Keuangan | ❌ | — |
+
+---
+
+#### 🏭 Supplier
+**Route:** `/suppliers`
+**Permission:** `supplier.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat, tambah, edit data supplier |
+| Admin | ✅ | Lihat, tambah, edit data supplier |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ✅ | Lihat dan kelola data supplier |
+
+---
+
+#### 🧾 Purchase Order
+**Route:** `/purchase-orders`, `/purchase-orders/create`, `/purchase-orders/:id`
+**Permission:** `supplier.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Buat PO, lihat semua PO, approve PO, cetak dokumen |
+| Admin | ✅ | Buat PO, lihat semua PO, approve PO, cetak dokumen |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ✅ | Buat PO, lihat semua PO, kelola pembayaran |
+
+---
+
+#### 💸 Utang Supplier
+**Route:** `/supplier-debts`, `/supplier-debts/payments`
+**Permission:** `supplier.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat utang, catat pembayaran, lihat riwayat bayar |
+| Admin | ✅ | Lihat utang, catat pembayaran, lihat riwayat bayar |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ✅ | Lihat utang, catat pembayaran, rekonsiliasi |
+
+---
+
+#### 📦 Konsinyasi
+**Route:** `/consignments`, `/consignments/create`, `/consignments/:id`
+**Permission:** `consignment.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Buat konsinyasi, lihat daftar, kelola status |
+| Admin | ✅ | Buat konsinyasi, lihat daftar, kelola status |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ✅ | Buat konsinyasi, kelola dokumen & settlement |
+
+---
+
+#### 💼 Settlement Konsinyasi
+**Route:** `/consignment-settlements`, `/consignment-settlements/:id`
+**Permission:** `consignment.manage`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat & proses settlement, cetak dokumen |
+| Admin | ✅ | Lihat & proses settlement, cetak dokumen |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ✅ | Lihat & proses settlement, rekonsiliasi keuangan |
+
+---
+
+#### 👥 Pengguna (Manajemen Akun)
+**Route:** `/users`, `/users/create`, `/users/:id/edit`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Tambah, edit, nonaktifkan pengguna, atur role |
+| Admin | ✅ | Tambah, edit, nonaktifkan pengguna, atur role |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ❌ | — |
+
+---
+
+#### 🏬 Cabang (Outlets)
+**Route:** `/outlets`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Owner | ✅ | Lihat, tambah, edit data cabang/outlet |
+| Admin | ✅ | Lihat, tambah, edit data cabang/outlet |
+| KepalaCabang | ❌ | — |
+| Kasir | ❌ | — |
+| Gudang | ❌ | — |
+| Keuangan | ❌ | — |
+
+---
+
+#### 🔑 Ganti Password
+**Route:** `/profile/change-password`
+
+| Role | Akses | Yang Bisa Dilakukan |
+|---|---|---|
+| Semua Role | ✅ | Ganti password akun sendiri |
+
+---
+
+#### ☕ Storefront Pelanggan (Publik)
+**Route:** `/shop/...`
+
+Halaman ini **tidak memerlukan login**. Dapat diakses oleh siapa saja melalui browser.
+
+| Halaman | Route | Fungsi |
+|---|---|---|
+| Landing Page | `/shop` | Tampilan selamat datang, pilih outlet atau lanjutkan pesanan |
+| Pilih Outlet | `/shop/outlets` | Daftar outlet yang tersedia untuk dipesan |
+| Menu | `/shop/o/:outletCode/menu` | Katalog produk dengan filter kategori & pencarian |
+| Detail Produk | `/shop/o/:outletCode/products/:productId` | Detail produk, input catatan, pilih jumlah, tambah ke keranjang |
+| Keranjang | `/shop/o/:outletCode/cart` | Review item belanja, edit kuantitas, hapus item |
+| Checkout | `/shop/o/:outletCode/checkout` | Isi data diri (nama, telepon), pilih metode pemesanan (pickup/dine-in/delivery) |
+| Status Pesanan | `/shop/o/:outletCode/orders/:orderId` | Tracking status pengerjaan pesanan, nomor invoice, tombol WhatsApp kasir |
+
+---
+
+### Ringkasan Akses per Role
+
+| Menu | Owner | Admin | KepalaCabang | Kasir | Gudang | Keuangan |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| Dashboard | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Sesi Kasir | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| POS Kasir | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Transaksi | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Produk | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
+| Kategori | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
+| Stok & Opname | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
+| Transfer Stok | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
+| Supplier | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Purchase Order | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Utang Supplier | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Konsinyasi | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Settlement Konsinyasi | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Pengguna | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Cabang | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Ganti Password | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Storefront | *(publik)* | *(publik)* | *(publik)* | *(publik)* | *(publik)* | *(publik)* |
+
+---
 
 ## Status Project
 
@@ -21,6 +317,7 @@ Kondisi saat ini:
 - struktur frontend baru berbasis feature mulai disiapkan
 - backend aktif sudah tersedia sampai **Fase 6**
 - frontend sedang disiapkan untuk mengikuti roadmap MorrusPOS
+- storefront customer ordering sudah tersedia di `/shop`
 
 Artinya, project ini belum final sebagai produk operasional penuh, tetapi pondasi untuk migrasi modul sudah mulai dibangun.
 
@@ -84,6 +381,18 @@ frontend/
 │   │   ├── consignments/
 │   │   ├── users/
 │   │   └── outlets/
+│   ├── storefront/
+│   │   ├── context/
+│   │   ├── layouts/
+│   │   ├── components/
+│   │   ├── api/
+│   │   └── features/
+│   │       ├── landing/
+│   │       ├── outlets/
+│   │       ├── catalog/
+│   │       ├── cart/
+│   │       ├── checkout/
+│   │       └── orders/
 │   ├── hooks/
 │   ├── lib/
 │   ├── styles/
@@ -121,6 +430,8 @@ Secara default aplikasi akan berjalan di:
 ```text
 http://localhost:5173
 ```
+
+Backend ASP.NET Core harus berjalan terlebih dahulu (default port 5000 / 7000).
 
 ### Build production
 

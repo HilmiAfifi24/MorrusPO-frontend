@@ -2,6 +2,10 @@
 
 Dokumen ini menjadi acuan pengembangan frontend **MorrusPOS** dari kondisi saat ini yang masih berupa template **TailAdmin React** menjadi aplikasi operasional POS yang sesuai dengan slide presentasi MorrusPOS dan sinkron dengan backend yang saat ini sudah berjalan sampai **Fase 6**.
 
+Untuk pengembangan frontend **customer-facing / online ordering**, lihat dokumen terpisah:
+
+- `frontend/docs/frontend_customer_ordering_roadmap.md`
+
 ---
 
 ## Kondisi Saat Ini

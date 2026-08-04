@@ -1,5 +1,18 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes, Outlet } from "react-router";
 import { ScrollToTop } from "../../components/common/ScrollToTop";
+
+// Storefront Imports
+import { StorefrontProvider } from "../../storefront/context/StorefrontContext";
+import StorefrontLayout from "../../storefront/layouts/StorefrontLayout";
+import CheckoutLayout from "../../storefront/layouts/CheckoutLayout";
+import OrderStatusLayout from "../../storefront/layouts/OrderStatusLayout";
+import LandingPage from "../../storefront/features/landing/pages/LandingPage";
+import StorefrontOutletsPage from "../../storefront/features/outlets/pages/OutletsPage";
+import MenuPage from "../../storefront/features/catalog/pages/MenuPage";
+import ProductDetailPage from "../../storefront/features/catalog/pages/ProductDetailPage";
+import CartPage from "../../storefront/features/cart/pages/CartPage";
+import CheckoutPage from "../../storefront/features/checkout/pages/CheckoutPage";
+import OrderStatusPage from "../../storefront/features/orders/pages/OrderStatusPage";
 import AppErrorState from "../../components/ui/AppErrorState";
 import AuthGuard from "../guards/AuthGuard";
 import GuestGuard from "../guards/GuestGuard";
@@ -418,6 +431,32 @@ export default function AppRouter() {
               </PermissionGuard>
             }
           />
+        </Route>
+
+        {/* PUBLIC STOREFRONT SHELL */}
+        <Route
+          path="/shop"
+          element={
+            <StorefrontProvider>
+              <Outlet />
+            </StorefrontProvider>
+          }
+        >
+          <Route element={<StorefrontLayout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="outlets" element={<StorefrontOutletsPage />} />
+            <Route path="o/:outletCode/menu" element={<MenuPage />} />
+            <Route path="o/:outletCode/products/:productId" element={<ProductDetailPage />} />
+            <Route path="o/:outletCode/cart" element={<CartPage />} />
+          </Route>
+          
+          <Route path="o/:outletCode/checkout" element={<CheckoutLayout />}>
+            <Route index element={<CheckoutPage />} />
+          </Route>
+
+          <Route path="o/:outletCode/orders/:orderId" element={<OrderStatusLayout />}>
+            <Route index element={<OrderStatusPage />} />
+          </Route>
         </Route>
 
         <Route
