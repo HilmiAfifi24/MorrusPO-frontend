@@ -75,19 +75,20 @@ export default function UserForm({
         <div className="grid gap-5 md:grid-cols-2">
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Nama
+              Nama <span className="text-error-500">*</span>
             </span>
             <input
               value={values.name}
               onChange={(event) => onChange("name", event.target.value)}
               className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
             />
+            <p className="mt-1 text-xs text-gray-400">Minimal 3 karakter. Hanya huruf, spasi, titik (.), atau petik tunggal (').</p>
             <FieldErrorText message={errors.name} />
           </label>
 
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Email
+              Email <span className="text-error-500">*</span>
             </span>
             <input
               type="email"
@@ -95,12 +96,13 @@ export default function UserForm({
               onChange={(event) => onChange("email", event.target.value)}
               className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
             />
+            <p className="mt-1 text-xs text-gray-400">Contoh: nama@domain.com</p>
             <FieldErrorText message={errors.email} />
           </label>
 
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Role
+              Role <span className="text-error-500">*</span>
             </span>
             <select
               value={values.roleId}
@@ -119,7 +121,7 @@ export default function UserForm({
 
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Outlet
+              Outlet {!isOwner(selectedRoleName) && <span className="text-error-500">*</span>}
             </span>
             <select
               value={values.outletId}
@@ -137,6 +139,7 @@ export default function UserForm({
                 </option>
               ))}
             </select>
+            <p className="mt-1 text-xs text-gray-400">Wajib diisi untuk selain peran Owner.</p>
             <FieldErrorText message={errors.outletId} />
             {selectedOutletInactive ? (
               <p className="mt-2 text-xs text-warning-700 dark:text-warning-300">
@@ -148,7 +151,7 @@ export default function UserForm({
           {"password" in values ? (
             <label className="block md:col-span-2">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Password
+                Password <span className="text-error-500">*</span>
               </span>
               <input
                 type="password"
@@ -157,6 +160,41 @@ export default function UserForm({
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
               <FieldErrorText message={errors.password} />
+              
+              {values.password && (
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs bg-gray-50 dark:bg-gray-950 p-4 rounded-2xl border border-gray-150 dark:border-gray-800">
+                  <div className="flex items-center gap-1.5">
+                    <span className={values.password.length >= 8 ? "text-success-600 font-bold" : "text-error-500"}>
+                      {values.password.length >= 8 ? "✓" : "✗"}
+                    </span>
+                    <span className={values.password.length >= 8 ? "text-gray-900 dark:text-gray-100" : "text-gray-500"}>Min. 8 karakter</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className={/[A-Z]/.test(values.password) ? "text-success-600 font-bold" : "text-error-500"}>
+                      {/[A-Z]/.test(values.password) ? "✓" : "✗"}
+                    </span>
+                    <span className={/[A-Z]/.test(values.password) ? "text-gray-900 dark:text-gray-100" : "text-gray-500"}>Huruf besar (A-Z)</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className={/[a-z]/.test(values.password) ? "text-success-600 font-bold" : "text-error-500"}>
+                      {/[a-z]/.test(values.password) ? "✓" : "✗"}
+                    </span>
+                    <span className={/[a-z]/.test(values.password) ? "text-gray-900 dark:text-gray-100" : "text-gray-500"}>Huruf kecil (a-z)</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className={/[0-9]/.test(values.password) ? "text-success-600 font-bold" : "text-error-500"}>
+                      {/[0-9]/.test(values.password) ? "✓" : "✗"}
+                    </span>
+                    <span className={/[0-9]/.test(values.password) ? "text-gray-900 dark:text-gray-100" : "text-gray-500"}>Angka (0-9)</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 col-span-2">
+                    <span className={/[^A-Za-z0-9]/.test(values.password) ? "text-success-600 font-bold" : "text-error-500"}>
+                      {/[^A-Za-z0-9]/.test(values.password) ? "✓" : "✗"}
+                    </span>
+                    <span className={/[^A-Za-z0-9]/.test(values.password) ? "text-gray-900 dark:text-gray-100" : "text-gray-500"}>Simbol khusus (mis. @, $, !, %, dll)</span>
+                  </div>
+                </div>
+              )}
             </label>
           ) : null}
 
