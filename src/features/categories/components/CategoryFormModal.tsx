@@ -91,7 +91,7 @@ export default function CategoryFormModal({
 
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Nama kategori
+              Nama kategori <span className="text-error-500">*</span>
             </span>
             <input
               value={values.name}
@@ -100,6 +100,7 @@ export default function CategoryFormModal({
               }
               className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
             />
+            <p className="mt-1 text-xs text-gray-400">Min. 3 karakter.</p>
             <FieldErrorText message={errors.name} />
           </label>
 
@@ -121,9 +122,7 @@ export default function CategoryFormModal({
                 </option>
               ))}
             </select>
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-              Kategori tidak bisa menjadi parent untuk dirinya sendiri.
-            </p>
+            <p className="mt-1 text-xs text-gray-400">Kategori tidak bisa menjadi parent bagi dirinya sendiri.</p>
           </label>
 
           <div className="flex items-center justify-end gap-3">

@@ -44,7 +44,7 @@ export default function ProductForm({
           <div className="grid gap-5 md:grid-cols-2">
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Kategori
+                Kategori <span className="text-error-500">*</span>
               </span>
               <select
                 value={values.categoryId}
@@ -63,25 +63,27 @@ export default function ProductForm({
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                SKU
+                SKU <span className="text-error-500">*</span>
               </span>
               <input
                 value={values.sku}
                 onChange={(event) => onChange("sku", event.target.value)}
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-400">Min. 3 karakter. Hanya huruf, angka, strip (-), dan underscore (_).</p>
               <FieldErrorText message={errors.sku} />
             </label>
 
             <label className="block md:col-span-2">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Nama produk
+                Nama produk <span className="text-error-500">*</span>
               </span>
               <input
                 value={values.name}
                 onChange={(event) => onChange("name", event.target.value)}
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-400">Min. 3 karakter.</p>
               <FieldErrorText message={errors.name} />
             </label>
 
@@ -94,26 +96,27 @@ export default function ProductForm({
                 onChange={(event) => onChange("barcode", event.target.value)}
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                Opsional, tetapi harus unik jika diisi.
+              <p className="mt-1 text-xs text-gray-400">
+                Opsional. Masukkan nomor barcode (8-18 angka).
               </p>
             </label>
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Unit
+                Satuan <span className="text-error-500">*</span>
               </span>
               <input
                 value={values.unit}
                 onChange={(event) => onChange("unit", event.target.value)}
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-400">Contoh: pcs, kg, box.</p>
               <FieldErrorText message={errors.unit} />
             </label>
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Harga jual
+                Harga jual <span className="text-error-500">*</span>
               </span>
               <input
                 type="number"
@@ -123,12 +126,13 @@ export default function ProductForm({
                 onChange={(event) => onChange("basePrice", event.target.value)}
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-400">Harus lebih besar dari Harga Modal.</p>
               <FieldErrorText message={errors.basePrice} />
             </label>
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Harga modal
+                Harga modal <span className="text-error-500">*</span>
               </span>
               <input
                 type="number"
@@ -138,6 +142,7 @@ export default function ProductForm({
                 onChange={(event) => onChange("costPrice", event.target.value)}
                 className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
               />
+              <p className="mt-1 text-xs text-gray-400">Harga modal harus lebih rendah dari harga jual.</p>
               <FieldErrorText message={errors.costPrice} />
               {isEditMode ? (
                 <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">

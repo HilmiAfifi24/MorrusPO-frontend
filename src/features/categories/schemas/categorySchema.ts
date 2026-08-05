@@ -7,6 +7,8 @@ export function validateCategoryForm(values: CategoryFormValues) {
 
   if (!values.name.trim()) {
     errors.name = "Nama kategori wajib diisi.";
+  } else if (values.name.trim().length < 3) {
+    errors.name = "Nama kategori minimal 3 karakter.";
   } else if (values.name.trim().length > 100) {
     errors.name = "Nama kategori maksimal 100 karakter.";
   }
