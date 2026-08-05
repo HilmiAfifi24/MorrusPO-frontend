@@ -43,13 +43,23 @@ export default function TransactionActionPanel({
     transaction.status === "voided" || !hasRefundableItems;
 
   async function handleVoidConfirm() {
+    const trimmedReason = voidReason.trim();
+    if (!trimmedReason) {
+      setError("Alasan void wajib diisi.");
+      return;
+    }
+    if (trimmedReason.length < 5) {
+      setError("Alasan void harus minimal 5 karakter.");
+      return;
+    }
+
     setIsBusy(true);
     setError(null);
     setFeedback(null);
 
     try {
       const updated = await voidTransaction(transaction.id, {
-        reason: voidReason.trim(),
+        reason: trimmedReason,
       });
       onUpdated(updated);
       setFeedback("Transaksi berhasil di-void dan stok sudah dikembalikan.");
@@ -64,9 +74,16 @@ export default function TransactionActionPanel({
 
   async function handleRefundSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsBusy(true);
-    setError(null);
-    setFeedback(null);
+
+    const trimmedReason = refundReason.trim();
+    if (!trimmedReason) {
+      setError("Alasan refund wajib diisi.");
+      return;
+    }
+    if (trimmedReason.length < 5) {
+      setError("Alasan refund harus minimal 5 karakter.");
+      return;
+    }
 
     const items = transaction.items
       .map((item) => ({
@@ -77,13 +94,24 @@ export default function TransactionActionPanel({
 
     if (items.length === 0) {
       setError("Isi minimal satu qty refund sebelum memproses refund.");
-      setIsBusy(false);
       return;
     }
 
+    for (const rItem of items) {
+      const trxItem = transaction.items.find((item) => item.productId === rItem.productId);
+      if (trxItem && rItem.qty > trxItem.remainingQty) {
+        setError(`Jumlah refund untuk ${trxItem.productName} tidak boleh melebihi sisa Qty (${trxItem.remainingQty}).`);
+        return;
+      }
+    }
+
+    setIsBusy(true);
+    setError(null);
+    setFeedback(null);
+
     const payload: RefundTransactionRequest = {
       refundMethod,
-      reason: refundReason.trim() || null,
+      reason: trimmedReason,
       items,
     };
 
@@ -142,13 +170,16 @@ export default function TransactionActionPanel({
             value={voidReason}
             onChange={(event) => setVoidReason(event.target.value)}
             rows={4}
-            placeholder="Alasan pembatalan transaksi"
+            placeholder="Alasan pembatalan transaksi (wajib, min. 5 karakter) *"
             className="mt-3 w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-white"
           />
+          {voidReason && voidReason.trim().length < 5 && (
+            <p className="text-xs text-error-600 mt-1">Minimal 5 karakter.</p>
+          )}
           <button
             type="button"
             onClick={() => setConfirmVoidOpen(true)}
-            disabled={!canVoid || voidDisabled || !voidReason.trim() || isBusy}
+            disabled={!canVoid || voidDisabled || voidReason.trim().length < 5 || isBusy}
             className="mt-4 inline-flex items-center rounded-xl bg-error-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             Void transaksi
@@ -180,9 +211,12 @@ export default function TransactionActionPanel({
               value={refundReason}
               onChange={(event) => setRefundReason(event.target.value)}
               rows={3}
-              placeholder="Catatan refund (opsional)"
+              placeholder="Catatan/Alasan refund (wajib, min. 5 karakter) *"
               className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-white"
             />
+            {refundReason && refundReason.trim().length < 5 && (
+              <p className="text-xs text-error-600 mt-1">Minimal 5 karakter.</p>
+            )}
           </div>
 
           <div className="mt-4 space-y-3">
@@ -220,7 +254,7 @@ export default function TransactionActionPanel({
 
           <button
             type="submit"
-            disabled={!canRefund || refundDisabled || isBusy}
+            disabled={!canRefund || refundDisabled || refundReason.trim().length < 5 || isBusy}
             className="mt-4 inline-flex items-center rounded-xl bg-warning-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             Proses refund

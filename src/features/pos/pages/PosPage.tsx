@@ -298,6 +298,14 @@ export default function PosPage() {
       return;
     }
 
+    const nonCashWithoutRef = payments.some(
+      (p) => p.method !== "cash" && !p.referenceNumber.trim()
+    );
+    if (nonCashWithoutRef) {
+      setError("Nomor referensi wajib diisi untuk pembayaran non-tunai (Debit, Kredit, QRIS).");
+      return;
+    }
+
     const payload: CheckoutRequest = {
       id: crypto.randomUUID(),
       outletId: effectiveOutletId,
@@ -594,9 +602,12 @@ export default function PosPage() {
                     onChange={(event) =>
                       updatePaymentRow(payment.id, "referenceNumber", event.target.value)
                     }
-                    placeholder="Nomor referensi (opsional)"
+                    placeholder={payment.method === "cash" ? "Nomor referensi (opsional)" : "Nomor referensi (wajib) *"}
                     className="h-11 rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-white"
                   />
+                  {payment.method !== "cash" && !payment.referenceNumber.trim() && (
+                    <p className="text-[11px] text-error-600 -mt-2">Nomor referensi wajib diisi untuk non-tunai.</p>
+                  )}
                   {payments.length > 1 ? (
                     <button
                       type="button"

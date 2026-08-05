@@ -213,7 +213,7 @@ export default function CashierSessionPage() {
                 <form className="space-y-4 border-t border-gray-200 pt-5 dark:border-gray-800" onSubmit={handleCloseSession}>
                   <label className="block">
                     <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Kas aktual saat tutup sesi
+                      Kas aktual saat tutup sesi <span className="text-error-500">*</span>
                     </span>
                     <input
                       type="number"
@@ -223,6 +223,7 @@ export default function CashierSessionPage() {
                       onChange={(event) => setActualCash(event.target.value)}
                       className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
                     />
+                    <p className="mt-1 text-xs text-gray-400">Harus berupa angka 0 atau lebih.</p>
                     <FieldErrorText message={!actualCash ? "Kas aktual wajib diisi untuk tutup sesi." : undefined} />
                   </label>
                   <button
@@ -238,7 +239,7 @@ export default function CashierSessionPage() {
               <form className="space-y-4" onSubmit={handleOpenSession}>
                 <label className="block">
                   <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    Kas awal
+                    Kas awal <span className="text-error-500">*</span>
                   </span>
                   <input
                     type="number"
@@ -248,6 +249,7 @@ export default function CashierSessionPage() {
                     onChange={(event) => setOpeningCash(event.target.value)}
                     className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-950 dark:text-white"
                   />
+                  <p className="mt-1 text-xs text-gray-400">Harus berupa angka 0 atau lebih.</p>
                 </label>
                 <button
                   type="submit"
