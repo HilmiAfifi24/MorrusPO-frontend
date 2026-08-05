@@ -20,9 +20,9 @@ type CartItem = {
   productName: string;
   sku: string;
   unit: string;
-  qty: number;
+  qty: number | "";
   unitPrice: number;
-  discountAmount: number;
+  discountAmount: number | "";
   availableStock: number;
 };
 
@@ -151,11 +151,11 @@ export default function PosPage() {
   }, [products, searchTerm]);
 
   const subtotal = useMemo(
-    () => cart.reduce((sum, item) => sum + item.unitPrice * item.qty, 0),
+    () => cart.reduce((sum, item) => sum + item.unitPrice * (Number(item.qty) || 0), 0),
     [cart],
   );
   const discountTotal = useMemo(
-    () => cart.reduce((sum, item) => sum + item.discountAmount, 0),
+    () => cart.reduce((sum, item) => sum + (Number(item.discountAmount) || 0), 0),
     [cart],
   );
   const taxTotal = 0;
@@ -164,7 +164,24 @@ export default function PosPage() {
     () => payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0),
     [payments],
   );
-  const paymentBalanced = totalPayment === grandTotal && grandTotal > 0;
+  const hasCashPayment = useMemo(
+    () => payments.some((p) => p.method === "cash"),
+    [payments],
+  );
+  const paymentBalanced = useMemo(() => {
+    if (grandTotal <= 0) return false;
+    if (hasCashPayment) {
+      return totalPayment >= grandTotal;
+    }
+    return totalPayment === grandTotal;
+  }, [totalPayment, grandTotal, hasCashPayment]);
+
+  const changeAmount = useMemo(() => {
+    if (totalPayment > grandTotal && hasCashPayment) {
+      return totalPayment - grandTotal;
+    }
+    return 0;
+  }, [totalPayment, grandTotal, hasCashPayment]);
 
   function addToCart(product: ProductDto) {
     if (product.qtyOnHand <= 0) {
@@ -175,7 +192,7 @@ export default function PosPage() {
     setCart((current) => {
       const existing = current.find((item) => item.productId === product.id);
       if (existing) {
-        const nextQty = existing.qty + 1;
+        const nextQty = (Number(existing.qty) || 0) + 1;
         if (nextQty > product.qtyOnHand) {
           setWarning(`Stok ${product.name} tidak cukup untuk menambah qty lagi.`);
           return current;
@@ -210,13 +227,17 @@ export default function PosPage() {
           return item;
         }
 
+        if (value === "") {
+          return { ...item, [key]: "" };
+        }
+
         const numericValue = Number(value);
-        if (!Number.isFinite(numericValue)) {
+        if (isNaN(numericValue) || !Number.isFinite(numericValue)) {
           return item;
         }
 
         if (key === "qty") {
-          if (numericValue <= 0) {
+          if (numericValue < 0) {
             return item;
           }
           if (numericValue > item.availableStock) {
@@ -227,7 +248,7 @@ export default function PosPage() {
           return { ...item, qty: numericValue };
         }
 
-        const lineSubtotal = item.unitPrice * item.qty;
+        const lineSubtotal = item.unitPrice * (Number(item.qty) || 0);
         if (numericValue < 0 || numericValue > lineSubtotal) {
           setWarning(`Diskon ${item.productName} tidak valid.`);
           return item;
@@ -267,6 +288,11 @@ export default function PosPage() {
       return;
     }
 
+    if (cart.some((item) => (Number(item.qty) || 0) <= 0)) {
+      setError("Jumlah item (Qty) harus minimal 1.");
+      return;
+    }
+
     if (!paymentBalanced) {
       setError("Total pembayaran harus sama dengan grand total sebelum checkout.");
       return;
@@ -283,15 +309,38 @@ export default function PosPage() {
       grandTotal,
       items: cart.map((item) => ({
         productId: item.productId,
-        qty: item.qty,
+        qty: Number(item.qty) || 0,
         unitPrice: item.unitPrice,
-        discountAmount: item.discountAmount,
+        discountAmount: Number(item.discountAmount) || 0,
       })),
-      payments: payments.map<PaymentRequest>((payment) => ({
-        method: payment.method,
-        amount: Number(payment.amount) || 0,
-        referenceNumber: payment.referenceNumber || null,
-      })),
+      payments: (() => {
+        const nonCashTotal = payments
+          .filter((p) => p.method !== "cash")
+          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+
+        const requiredCash = Math.max(0, grandTotal - nonCashTotal);
+        let cashApplied = false;
+
+        return payments
+          .map<PaymentRequest>((payment) => {
+            if (payment.method !== "cash") {
+              return {
+                method: payment.method,
+                amount: Number(payment.amount) || 0,
+                referenceNumber: payment.referenceNumber || null,
+              };
+            } else {
+              const amount = cashApplied ? 0 : requiredCash;
+              cashApplied = true;
+              return {
+                method: payment.method,
+                amount: amount,
+                referenceNumber: payment.referenceNumber || null,
+              };
+            }
+          })
+          .filter((p) => p.amount > 0);
+      })(),
     };
 
     setIsSubmitting(true);
@@ -446,6 +495,11 @@ export default function PosPage() {
                         step="1"
                         value={item.qty}
                         onChange={(event) => updateCartItem(item.productId, "qty", event.target.value)}
+                        onBlur={() => {
+                          if (!item.qty || Number(item.qty) < 1) {
+                            updateCartItem(item.productId, "qty", "1");
+                          }
+                        }}
                         className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-white"
                       />
                     </label>
@@ -459,6 +513,11 @@ export default function PosPage() {
                         onChange={(event) =>
                           updateCartItem(item.productId, "discountAmount", event.target.value)
                         }
+                        onBlur={() => {
+                          if (item.discountAmount === "" || Number(item.discountAmount) < 0) {
+                            updateCartItem(item.productId, "discountAmount", "0");
+                          }
+                        }}
                         className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none dark:border-gray-800 dark:bg-gray-950 dark:text-white"
                       />
                     </label>
@@ -468,7 +527,7 @@ export default function PosPage() {
                       {formatCurrency(item.unitPrice)} × {item.qty}
                     </span>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {formatCurrency(item.unitPrice * item.qty - item.discountAmount)}
+                      {formatCurrency(item.unitPrice * (Number(item.qty) || 0) - (Number(item.discountAmount) || 0))}
                     </span>
                   </div>
                 </div>
@@ -557,6 +616,15 @@ export default function PosPage() {
                 {formatCurrency(totalPayment)}
               </span>
             </div>
+
+            {changeAmount > 0 ? (
+              <div className="flex items-center justify-between rounded-2xl bg-success-50 dark:bg-success-950/20 px-4 py-3 text-sm border border-success-200 dark:border-success-800/30">
+                <span className="text-success-700 dark:text-success-400 font-medium">Kembalian</span>
+                <span className="font-semibold text-success-700 dark:text-success-300">
+                  {formatCurrency(changeAmount)}
+                </span>
+              </div>
+            ) : null}
 
             <button
               type="button"
