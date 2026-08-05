@@ -27,6 +27,7 @@ import ConsignmentDetailPage from "../../features/consignments/pages/Consignment
 import ConsignmentSettlementsPage from "../../features/consignments/pages/ConsignmentSettlementsPage";
 import ConsignmentSettlementDetailPage from "../../features/consignments/pages/ConsignmentSettlementDetailPage";
 import DashboardPage from "../../features/dashboard/pages/DashboardPage";
+import ProfitLossReportPage from "../../features/reports/pages/ProfitLossReportPage";
 import SupplierDebtsPage from "../../features/debts/pages/SupplierDebtsPage";
 import SupplierDebtPaymentsPage from "../../features/debts/pages/SupplierDebtPaymentsPage";
 import InventoryPage from "../../features/inventory/pages/InventoryPage";
@@ -67,6 +68,8 @@ const supplierDebtsPolicy = getNavigationItem("/supplier-debts");
 const consignmentsPolicy = getNavigationItem("/consignments");
 const usersPolicy = getNavigationItem("/users");
 const outletsPolicy = getNavigationItem("/outlets");
+const dashboardPolicy = getNavigationItem("/dashboard");
+const reportPolicy = getNavigationItem("/reports/profit-loss");
 
 export default function AppRouter() {
   return (
@@ -93,7 +96,28 @@ export default function AppRouter() {
           }
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
+          <Route
+            path="dashboard"
+            element={
+              <PermissionGuard
+                requiredPermissions={dashboardPolicy?.requiredPermissions}
+                fallbackRoles={dashboardPolicy?.fallbackRoles}
+              >
+                <DashboardPage />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="reports/profit-loss"
+            element={
+              <PermissionGuard
+                requiredPermissions={reportPolicy?.requiredPermissions}
+                fallbackRoles={reportPolicy?.fallbackRoles}
+              >
+                <ProfitLossReportPage />
+              </PermissionGuard>
+            }
+          />
           <Route
             path="cashier/session"
             element={

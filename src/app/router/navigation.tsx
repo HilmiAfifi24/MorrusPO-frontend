@@ -49,9 +49,17 @@ const productRoles: AppRole[] = ["Owner", "Admin", "Gudang", "KepalaCabang"];
 const stockRoles: AppRole[] = ["Owner", "Admin", "Gudang", "KepalaCabang"];
 const supplierRoles: AppRole[] = ["Owner", "Admin", "Keuangan"];
 const consignmentRoles: AppRole[] = ["Owner", "Admin", "Keuangan"];
+const dashboardRoles: AppRole[] = ["Owner", "Admin", "Keuangan", "KepalaCabang"];
+const reportRoles: AppRole[] = ["Owner", "Admin", "Keuangan", "KepalaCabang"];
 
 export const appNavigation: NavItem[] = [
-  { label: "Dashboard", path: "/dashboard", icon: <GridIcon />, status: "active" },
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    icon: <GridIcon />,
+    fallbackRoles: dashboardRoles,
+    status: "active",
+  },
   {
     label: "Sesi Kasir",
     path: "/cashier/session",
@@ -151,6 +159,13 @@ export const appNavigation: NavItem[] = [
     path: "/outlets",
     icon: <DocsIcon />,
     fallbackRoles: ownerAdminRoles,
+    status: "active",
+  },
+  {
+    label: "Laba Rugi",
+    path: "/reports/profit-loss",
+    icon: <DocsIcon />,
+    fallbackRoles: reportRoles,
     status: "active",
   },
 ];
